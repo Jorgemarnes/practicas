@@ -1,11 +1,80 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Prueba</title>
         <meta charset="UTF-8"/>
+        <style>
+            body{
+                font-family: sans-serif;
+                display: grid;
+                justify-content: center;
+            }
+
+            h4{
+                color: black;
+            }
+
+            #container{
+                width: 80vh;
+                border: 1px solid black;
+
+            }
+
+            #info {
+                display: grid;
+                grid-template-columns: 60% 40%;
+                color: #64748b;
+            }
+
+            #sinopsis{
+                padding: 15px;
+            }
+
+            #data{
+                padding: 15px;
+            }
+
+
+        </style>
     </head>
     <body>
-        <div id="cabecera"></div>
-        <div id="titulo"></div>
-        <div id="info"></div>
+        <div id="container">
+            <div id="cabecera"></div>
+            <div id="titulo"></div>
+            <div id="info">
+                <div id="sinopsis">
+                    <p>parrafo1</p>
+                    <hr>
+                    <p>parrafo2</p>
+                    <ul>
+                        <li>direccion</li>
+                        <li>reparto</li>
+                        <li>prod</li>
+                        <li>gen</li>
+                        <li>duracion</li>
+                    </ul>
+                    <hr style="margin-bottom: 20px;">
+                    <p>parrafo3</p>
+                </div>
+                <div id="data">
+                    <div>
+                        <h4>Fecha y Hora</h4>
+                    </div>
+                    <p>Lorem ipsum</p>
+                    <div>
+                        <h4>Lugar</h4>
+                    </div>
+                    <p>Lorem ipsum</p>
+                    <div>
+                        <h4>Clasificación</h4>
+                    </div>
+                    <p>Lorem ipsum</p>
+                    <div>
+                        <h4>Políticas de reembolso</h4>
+                    </div>
+                    <p>Lorem ipsum</p>
+                </div>
+            </div>
+        </div>
     </body> 
 </html>
