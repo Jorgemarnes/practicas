@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Prueba</title>
-        <meta charset="UTF-8"/>
-        <div id="container">
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
         <link rel="stylesheet" href="/style.css">
         <style>
             body{
@@ -35,8 +35,14 @@
             }
 
             #container{
-                width: 80vh;
+                max-width:50vw;
+                width: 50vw;
                 background-color: #fbfbfb;
+                border-radius: 3mm;
+                position: absolute;
+                top: 0px;
+                left: 25vw;
+                z-index: 2;
 
             }
 
@@ -58,22 +64,30 @@
         </style>
     </head>
     <body>
+        <div id="background">
+            <img src="foto.jpg"/>
+        </div>
+        <div id="container">
             <div id="cabecera">
                 <img src="./foto.jpg" alt='Portada de "El postre"'>
             </div>
             <div id="titulo">
                 <div id="titulo_info">
                     <h1 class="texto">21 de mayo</h1>
-                    <h4 class="texto">El postre - del Taller de Interpretación ante la Cámara</h4>
-                    <a class="texto" id="ubicacion" 
-                    href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
-                    onmouseenter="animacion_ubi()" onmouseleave="animacion_ubi()"
-                    >Teatro Cine Realejos,<br/>Los Realejos</a>
-                    <p class="texto">Gratuito</p>
+                    <h2 class="texto">El postre - del Taller de Interpretación ante la Cámara</h2>
+                    <div id="ubiprecio">
+                        <a class="texto" id="ubicacion" 
+                        href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
+                        onmouseenter="animacion_ubi()" onmouseleave="animacion_ubi()"
+                        >Teatro Cine Realejos,<br/>Los Realejos</a>
+                        <b class="texto" id="precio">Gratuito</b>
+                    </div>
                 </div>
-                <button class="texto" id="entradas" 
-                onmouseleave="animacion_boton()" onmouseenter="animacion_boton()"
-                >Entradas</button>
+                <div id="buttonBox">
+                    <button class="texto" id="entradas" 
+                    onmouseleave="animacion_boton()" onmouseenter="animacion_boton()"
+                    >Entradas</button>
+                </div>
             </div>
             <div id="info">
                 <div id="sinopsis">

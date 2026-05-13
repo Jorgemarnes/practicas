@@ -2,9 +2,22 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-image: url(/foto.jpg);
-                background-size: 2658px 1560px;
-                background-repeat: no-repeat;
+                font-family: sans-serif;
+            }
+
+            #background > img{
+                width: 2658px;
+                height: 1560px;
+            }
+
+            #background{
+                position: absolute;
+                z-index: 1;
+                top: 0px;
+                left: 0px;
+                filter: blur(2px);
+                width: 100%;
+                height: 100%;
             }
             
             #cabecera {
@@ -12,27 +25,30 @@
                 justify-content: center;
                 align-items: center;
             }
-            img {
-                max-width: 1000px;
-                border-radius: 5mm;
-                width: 70vw;
-                border-bottom-left-radius: 0mm;
-                border-bottom-right-radius: 0mm;
+            #cabecera >img {
+                max-width: 40vw;
+                border-radius: 3mm;
+                width: 50vw;
+                border-bottom-left-radius: 1mm;
+                border-bottom-right-radius: 1mm;
+                
             }
             #titulo {
                 max-width: 1000px;
-                width: 70vw;
+                width: 50vw;
                 display: grid;
                 align-items: center;
-                justify-content: space-between;
-                grid-template-columns: 50% 50%;
+                justify-content: center;
+                grid-template-columns: 60% 40%;
                 background-color: #fbfbfb;
                 border-radius: 5mm;
                 border-top-left-radius: 0mm;
                 border-top-right-radius: 0mm;
             }
             #titulo_info {
-                margin-left: 10px;
+                margin-left: 20px;
+                justify-content: space-around;
+                align-content: center;
             }
             #entradas {
                 height: 70px;
@@ -44,14 +60,29 @@
                 font-size: 28px;
                 color: white;
             }
-            h5 {
-                font-size: large;
-                font-weight: bold;
+
+            #buttonBox {
+                display: flex;
+                align-items: center;
+                align-content: center;
+                justify-content: center; 
             }
+           
             #ubicacion {
                 opacity: 60%;
                 color: black;
             }
-            .texto {
-                font-family: Arial, Helvetica, sans-serif;
+
+            #ubiprecio{
+                display: grid;
+                grid-template-columns: 70% 30%;
+                justify-content: center;
+            }
+
+            #precio{
+                font-size: 24px;
+            }
+
+            .texto{
+                width: fit-content;
             }
