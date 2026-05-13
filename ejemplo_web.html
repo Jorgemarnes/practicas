@@ -3,6 +3,8 @@
     <head>
         <title>Prueba</title>
         <meta charset="UTF-8"/>
+        <div id="container">
+        <link rel="stylesheet" href="/style.css">
         <style>
             body{
                 font-family: sans-serif;
@@ -56,9 +58,23 @@
         </style>
     </head>
     <body>
-        <div id="container">
-            <div id="cabecera"></div>
-            <div id="titulo"></div>
+            <div id="cabecera">
+                <img src="./foto.jpg" alt='Portada de "El postre"'>
+            </div>
+            <div id="titulo">
+                <div id="titulo_info">
+                    <h1 class="texto">21 de mayo</h1>
+                    <h4 class="texto">El postre - del Taller de Interpretación ante la Cámara</h4>
+                    <a class="texto" id="ubicacion" 
+                    href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
+                    onmouseenter="animacion_ubi()" onmouseleave="animacion_ubi()"
+                    >Teatro Cine Realejos,<br/>Los Realejos</a>
+                    <p class="texto">Gratuito</p>
+                </div>
+                <button class="texto" id="entradas" 
+                onmouseleave="animacion_boton()" onmouseenter="animacion_boton()"
+                >Entradas</button>
+            </div>
             <div id="info">
                 <div id="sinopsis">
                     <p>Sandra y Marcos deciden celebrar una noticia que cambiará sus vidas: van a ser padres. Para compartir la alegría con sus amigos, deciden contratar a un chef privado y organizar una cena perfecta. Sin embargo, lo que prometía ser una velada tranquila y feliz, se desmorona plato tras plato.
@@ -104,6 +120,6 @@
                     </p>
                 </div>
             </div>
-        </div>
     </body> 
+    <script src="script.js"></script>
 </html>
