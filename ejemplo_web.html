@@ -2,66 +2,8 @@
 <html>
     <head>
         <title>Prueba</title>
-        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0"/>
-        
+        <meta charset="UTF-8" name="viewport" content="width=device-width" initial-scale="1.0"/>
         <link rel="stylesheet" href="/style.css">
-        <style>
-            body{
-                font-family: sans-serif;
-                display: grid;
-                justify-content: center;
-            }
-
-            h4{
-                color: black;
-            }
-
-            li {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-
-            .data {
-                display:flex;
-                align-items: center;
-                margin-bottom: 5px;
-                margin-top: 5px;
-            }
-
-            .icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 0.5em;
-            }
-
-            #container{
-                max-width:50vw;
-                width: 50vw;
-                background-color: #fbfbfb;
-                border-radius: 3mm;
-                position: absolute;
-                top: 0px;
-                left: 25vw;
-                z-index: 2;
-
-            }
-
-            #info {
-                display: grid;
-                grid-template-columns: 60% 40%;
-                color: #64748b;
-            }
-
-            #sinopsis{
-                padding: 15px;
-            }
-
-            #data{
-                padding: 15px;
-            }
-
-
-        </style>
     </head>
     <body>
         <div id="background">
@@ -71,14 +13,15 @@
             <div id="cabecera">
                 <img src="./foto.jpg" alt='Portada de "El postre"'>
             </div>
+            <hr>
             <div id="titulo">
                 <div id="titulo_info">
                     <h1 class="texto">21 de mayo</h1>
                     <h2 class="texto">El postre - del Taller de Interpretación ante la Cámara</h2>
                     <div id="ubiprecio">
-                        <a class="texto" id="ubicacion" 
+                        <a class="texto" id="ubicacion1" 
                         href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
-                        onmouseenter="animacion_ubi()" onmouseleave="animacion_ubi()"
+                        onmouseenter="animacion_ubi1()" onmouseleave="animacion_ubi1()"
                         >Teatro Cine Realejos,<br/>Los Realejos</a>
                         <b class="texto" id="precio">Gratuito</b>
                     </div>
@@ -89,6 +32,7 @@
                     >Entradas</button>
                 </div>
             </div>
+            <hr>
             <div id="info">
                 <div id="sinopsis">
                     <p>Sandra y Marcos deciden celebrar una noticia que cambiará sus vidas: van a ser padres. Para compartir la alegría con sus amigos, deciden contratar a un chef privado y organizar una cena perfecta. Sin embargo, lo que prometía ser una velada tranquila y feliz, se desmorona plato tras plato.
@@ -112,28 +56,34 @@
                         <h4>Fecha y Hora</h4>
                     </div>
                     <p>Jueves, 21 de mayo de 2026, 20:30</p>
+                    <hr/>
                     <div class="data">
                         <img class="icon" src="map-pin.png" style="width:20px ; height:20px ;">
                         <h4>Lugar</h4>
                     </div>
-                    <p>Teatro Cine Realejos</p>
+                    <a id="ubicacion2" href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
+                    onmouseenter="animacion_ubi2()" onmouseleave="animacion_ubi2()"
+                    >Teatro Cine Realejos</a>
+                    <hr/>
                     <div class="data">
                         <img class="icon" src="users-three.png" style="width:20px ; height:20px ;">
                         <h4>Clasificación</h4>
                     </div>
                     <p>Todos los públicos</p>
+                    <hr/>
                     <div class="data">
-                        <img class="icon" src="file-text.png".png" style="width:20px ; height:20px ;">
+                        <img class="icon" src="file-text.png".png style="width:20px ; height:20px ;">
                         <h4>Políticas de reembolso</h4>
                     </div>
                     <p>Contacta vía teléfono al 922 346 234
-                    <br>
+                    <hr/>
                     De lunes a viernes de 9:00 a 14:00 horas
                     <br>
                     Avenida de Canarias, 6 CP38419, Los Realejos
                     </p>
                 </div>
             </div>
+        </div>
     </body> 
     <script src="script.js"></script>
 </html>

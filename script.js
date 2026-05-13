@@ -1,5 +1,6 @@
-let boton = document.getElementById("entradas")
-        let ubi = document.getElementById("ubicacion")
+        let boton = document.getElementById("entradas")
+        let ubi = document.getElementById("ubicacion1")
+        let ubi2 = document.getElementById("ubicacion2")
         button_state = false
         ubi_state = false
         function animacion_boton() {
@@ -12,13 +13,23 @@ let boton = document.getElementById("entradas")
                 button_state = false
             }
         }
-        function animacion_ubi() {
+        function animacion_ubi1() {
             if (!ubi_state) {
                 ubi.style.color = "blue"
                 ubi_state = true
             }
             else {
                 ubi.style.color = "black"
+                ubi_state = false
+            }
+        }
+        function animacion_ubi2() {
+            if (!ubi_state) {
+                ubi2.style.color = "blue"
+                ubi_state = true
+            }
+            else {
+                ubi2.style.color = "black"
                 ubi_state = false
             }
         }
