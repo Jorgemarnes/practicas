@@ -1,0 +1,57 @@
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-image: url(/foto.jpg);
+                background-size: 2658px 1560px;
+                background-repeat: no-repeat;
+            }
+            
+            #cabecera {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            img {
+                max-width: 1000px;
+                border-radius: 5mm;
+                width: 70vw;
+                border-bottom-left-radius: 0mm;
+                border-bottom-right-radius: 0mm;
+            }
+            #titulo {
+                max-width: 1000px;
+                width: 70vw;
+                display: grid;
+                align-items: center;
+                justify-content: space-between;
+                grid-template-columns: 50% 50%;
+                background-color: rgb(213, 226, 226);
+                border-radius: 5mm;
+                border-top-left-radius: 0mm;
+                border-top-right-radius: 0mm;
+            }
+            #titulo_info {
+                margin-left: 10px;
+            }
+            #entradas {
+                height: 70px;
+                width: 240px;
+                background-color: rgb(183, 52, 52);
+                border-radius: 2mm;
+                border: 0px;
+                font-weight: bold;
+                font-size: 28px;
+                color: white;
+            }
+            h5 {
+                font-size: large;
+                font-weight: bold;
+            }
+            #ubicacion {
+                opacity: 60%;
+                color: black;
+            }
+            .texto {
+                font-family: Arial, Helvetica, sans-serif;
+            }
