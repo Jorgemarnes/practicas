@@ -1,0 +1,42 @@
+body {
+    display:flex;
+    justify-content: center;
+    font-family: sans-serif;
+}
+
+#container {
+    display:grid;
+    width: 50vw;
+    background-color: #f6f6f6;
+    border-radius: 15px;
+}
+
+#cabecera {
+    width: 100%;
+}
+
+#cabecera > img {
+    width: 100%;
+    float: left;
+}
+
+#ubicacionprecio {
+    width:60%;
+
+}
+
+#ubicacion {
+    width: 60%;
+}
+
+#precio {
+    width: 60%;
+    float:left;
+}
+
+
+
+#container_boton {
+    width: 30%;
+    float:left;
+}
