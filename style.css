@@ -10,18 +10,22 @@
             }
 
             #background > img{
-                width: 2658px;
-                height: 1560px;
+                width: 10   0%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                filter: blur(8px);
+                transform: scale(1.1);
             }
 
             #background{
-                position: absolute;
+                position: fixed;
                 z-index: 1;
                 top: 0px;
                 left: 0px;
-                filter: blur(2px);
                 width: 100%;
                 height: 100%;
+                overflow: hidden;
             }
 
             #container{
@@ -132,9 +136,20 @@
                     width: 100%;
                     box-sizing: border-box;
                     left: 0px;
+                    border-bottom-right-radius: 0px;
+                    border-bottom-left-radius: 0px;
                     }
 
                 #cabecera > img{
                     width:100%;
+                }
+                
+                .data{
+                    font-size: 20px;
+                }
+
+                #data > p {
+                    margin-top: 0px;
+                    margin-bottom: 0px;
                 }
             }
