@@ -11,8 +11,13 @@
     };
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
 
-    const activityInfo = data.activities[0]
+    const activityInfo = data.activities[0];
+    let time = $state(new Date(activityInfo.date_start));
+    let hours = $derived(time.getHours());
+    let minutes = $derived(time.getMinutes());
 
     let boton: HTMLButtonElement | null = null;
     let ubi: HTMLAnchorElement | null = null;
@@ -58,8 +63,8 @@
 
     <div id="titulo">
         <div id="titulo_info">
-            <h1 class="texto">21 de mayo</h1>
-            <h1 class="texto">El postre - del Taller de Interpretación ante la Cámara</h1>
+            <h1 class="texto">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
+            <h1 class="texto">{activityInfo.activity_name}</h1>
             <div id="ubiprecio">
                 <a
                     class="texto"
@@ -69,9 +74,13 @@
                     onmouseenter={animacion_ubi}
                     onmouseleave={animacion_ubi}
                 >
-                    Teatro Cine Realejos, Los Realejos
+                    {activityInfo.name}
                 </a>
-                <b class="texto" id="precio">Gratuito</b>
+                {#if activityInfo.amount === 0}
+                    <b class="texto" id="precio">Gratuito</b>
+                {:else}
+                    <b class="texto" id="precio">{activityInfo.amount}€</b>
+                {/if}
             </div>
         </div>
         <div id="buttonBox">
@@ -97,21 +106,21 @@
                 <img class="icon" src="/calendar-dots.png" alt="Icono calendario" />
                 <h4>Fecha y Hora</h4>
             </div>
-            <p>Jueves, 21 de mayo de 2026, 20:30</p>
+            <p>{days[activityInfo.dow - 1]}, {activityInfo.day} de {months[activityInfo.month -1]} de {activityInfo.year}, {hours}:{minutes}</p>
             <hr />
 
             <div class="data">
                 <img class="icon" src="/map-pin.png" alt="Icono lugar" />
                 <h4>Lugar</h4>
             </div>
-            <p>Teatro Cine Realejos</p>
+            <p>{activityInfo.name}</p>
             <hr />
 
             <div class="data">
                 <img class="icon" src="/users-three.png" alt="Icono clasificación" />
                 <h4>Clasificación</h4>
             </div>
-            <p>Todos los públicos</p>
+            <p>{activityInfo.public_name}</p>
             <hr />
 
             <div class="data">
