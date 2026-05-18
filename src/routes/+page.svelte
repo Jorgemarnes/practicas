@@ -60,7 +60,7 @@
         <img src="/foto.jpg" alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
     </div>
 
-    <div id="container" class="w-screen lg:w-[50%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
+    <div id="container" class="w-screen lg:w-[40%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
         <div id="cabecera" class="w-full lg:w-full flex justify-center items-center">
             <img src="/foto.jpg" alt='Portada de "El postre"' class = "w-full lg:w-[50%] rounded-[1mm]"/>
         </div>
