@@ -52,80 +52,82 @@
     
 </script>
 
-<div id="background">
-    <img src="/foto.jpg" alt="Fondo" />
-</div>
-
-<div id="container">
-    <div id="cabecera">
-        <img src="/foto.jpg" alt='Portada de "El postre"' />
+<svelte:head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</svelte:head>
+<div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
+    <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
+        <img src="/foto.jpg" alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
     </div>
 
-    <div id="titulo">
-        <div id="titulo_info">
-            <h1 class="texto">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
-            <h1 class="texto">{activityInfo.activity_name}</h1>
-            <div id="ubiprecio">
-                <a
-                    class="texto"
-                    id="ubicacion"
-                    bind:this={ubi}
-                    href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
-                    onmouseenter={animacion_ubi}
-                    onmouseleave={animacion_ubi}
+    <div id="container" class="w-screen lg:w-[50%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
+        <div id="cabecera" class="w-full lg:w-full flex justify-center items-center">
+            <img src="/foto.jpg" alt='Portada de "El postre"' class = "w-full lg:w-[50%] rounded-[1mm]"/>
+        </div>
+
+        <div id="titulo" class="grid grid-cols-[60%_40%] max-lg:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">
+            <div id="titulo_info" class="ml-5 justify-around conten-center p-4">
+                <h1 class="text-2xl font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
+                <h1 class="text-2xl font-bold">{activityInfo.activity_name}</h1>
+                <div id="ubiprecio" class="grid grid-cols-[50fr_50fr] gap-5">
+                    <a
+                        class="text-opacity-60 text-black text-[22px] content-center"
+                        id="ubicacion"
+                        bind:this={ubi}
+                        href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
+                        onmouseenter={animacion_ubi}
+                        onmouseleave={animacion_ubi}
+                    >
+                        {activityInfo.name}
+                    </a>
+                    {#if activityInfo.amount === 0}
+                        <b class="text-2xl m-[0_auto] content-center">Gratuito</b>
+                    {:else}
+                        <b class="text-2xl m-[0_auto]">{activityInfo.amount}€</b>
+                    {/if}
+                </div>
+            </div>
+            <div id="buttonBox" class="flex items-center content-center justify-center p-4">
+                <button
+                    class="bg-[#b73434] hover:bg-[#c75b5b]  text-white text-[20px] font-bold py-3 px-12 margin-right-[5px] rounded"
+                    id="entradas"
+                    bind:this={boton}
                 >
-                    {activityInfo.name}
-                </a>
-                {#if activityInfo.amount === 0}
-                    <b class="texto" id="precio">Gratuito</b>
-                {:else}
-                    <b class="texto" id="precio">{activityInfo.amount}€</b>
-                {/if}
+                    Entradas
+                </button>
             </div>
         </div>
-        <div id="buttonBox">
-            <button
-                class="texto"
-                id="entradas"
-                bind:this={boton}
-                onmouseleave={animacion_boton}
-                onmouseenter={animacion_boton}
-            >
-                Entradas
-            </button>
-        </div>
-    </div>
 
-    <div id="info">
-        <div id="sinopsis">
+        <div class="flex flex-col lg:grid lg:grid-cols-[70%_30%] gap-10 max-w-225 mx-auto">
+        <div class="margin-left-[20px] p-4" >
             <div>{@html activityInfo.description}</div>
         </div>
 
-        <div id="data">
-            <div class="data">
-                <img class="icon" src="/calendar-dots.png" alt="Icono calendario" />
-                <h4>Fecha y Hora</h4>
+        <div class="margin-right-[60px_0] lg:margin-right-[20px] lg:w-[75%] lg:col-start-2 p-2" id="data">
+            <div class="margin-right-[10px]">
+                <img class="w-5 h-5 margin-right-[0.5em] icon" src="/calendar-dots.png" alt="Icono calendario" />
+                <h4 class="text-[16px] font-bold">Fecha y Hora</h4>
             </div>
             <p>{days[activityInfo.dow - 1]}, {activityInfo.day} de {months[activityInfo.month -1]} de {activityInfo.year}, {hours}:{minutes}</p>
             <hr />
 
-            <div class="data">
-                <img class="icon" src="/map-pin.png" alt="Icono lugar" />
-                <h4>Lugar</h4>
+            <div class="margin-right-[10px]">
+                <img class="w-5 h-5 margin-right-[0.5em] icon" src="/map-pin.png" alt="Icono lugar" />
+                <h4 class="text-[16px] font-bold">Lugar</h4>
             </div>
             <p>{activityInfo.name}</p>
             <hr />
 
-            <div class="data">
-                <img class="icon" src="/users-three.png" alt="Icono clasificación" />
-                <h4>Clasificación</h4>
+            <div class="margin-right-[10px]">
+                <img class="w-5 h-5 margin-right-[0.5em] icon" src="/users-three.png" alt="Icono clasificación" />
+                <h4 class="text-[16px] font-bold"   >Clasificación</h4>
             </div>
             <p>{activityInfo.public_name}</p>
             <hr />
 
-            <div class="data">
-                <img class="icon" src="/file-text.png" alt="Icono reembolso" />
-                <h4>Políticas de reembolso</h4>
+            <div class="margin-right-[10px]">
+                <img class="w-5 h-5 margin-right-[0.5em] icon" src="/file-text.png" alt="Icono reembolso" />
+                <h4 class="text-[16px] font-bold">Políticas de reembolso</h4>
             </div>
             <p>
                 Contacta vía teléfono al 922 346 234
@@ -136,9 +138,6 @@
             </p>
             <hr />
         </div>
+        </div>
     </div>
 </div>
-
-<style>
-    @import '$lib/style.css';
-</style>
