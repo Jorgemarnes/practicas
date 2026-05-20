@@ -1,12 +1,13 @@
 <script lang="ts">
+    import type { ActivityInfo } from '$lib/model';
     import { page } from '$app/stores';
     import '$lib/style.css';
     let { children } = $props();
 
-    type Activity = Record<string, any>;
+
 
     const data = $page.data as {
-        activities: Activity[];
+        activities: ActivityInfo[];
         error: string | null;
     };
 
@@ -18,6 +19,10 @@
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
+
+    const imagesUrl = activityInfo.url;
+    const image = JSON.parse(imagesUrl);
+    const url = image.small;
 
     let boton: HTMLButtonElement | null = null;
     let ubi: HTMLAnchorElement | null = null;
@@ -57,15 +62,15 @@
 </svelte:head>
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
-        <img src="/foto.jpg" alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
+        <img src='/foto.jpg' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
     </div>
 
-    <div id="container" class="w-screen lg:w-[40%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
-        <div id="cabecera" class="w-full lg:w-full flex justify-center items-center">
-            <img src="/foto.jpg" alt='Portada de "El postre"' class = "w-full lg:w-[50%] rounded-[1mm]"/>
+    <div id="container" class="w-screen 2xl:w-[40%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
+        <div id="cabecera" class="w-full 2xl:w-full flex justify-center items-center">
+            <img src='/foto.jpg' alt='Portada de "El postre"' class = "w-full 2xl:w-[50%] rounded-[1mm]"/>
         </div>
 
-        <div id="titulo" class="grid grid-cols-[60%_40%] max-lg:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">
+        <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">
             <div id="titulo_info" class="ml-5 justify-around conten-center p-4">
                 <h1 class="text-2xl font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
                 <h1 class="text-2xl font-bold">{activityInfo.activity_name}</h1>
@@ -78,7 +83,7 @@
                         onmouseenter={animacion_ubi}
                         onmouseleave={animacion_ubi}
                     >
-                        {activityInfo.name}
+                        {activityInfo.places_name}
                     </a>
                     {#if activityInfo.amount === 0}
                         <b class="text-2xl m-[0_auto] content-center">Gratuito</b>
@@ -98,36 +103,36 @@
             </div>
         </div>
 
-        <div class="flex flex-col lg:grid lg:grid-cols-[70%_30%] gap-10 max-w-225 mx-auto">
+        <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] gap-10 max-w-225 mx-auto">
         <div class="margin-left-[20px] p-4" >
             <div>{@html activityInfo.description}</div>
         </div>
 
-        <div class="margin-right-[60px_0] lg:margin-right-[20px] lg:w-[75%] lg:col-start-2 p-2" id="data">
-            <div class="margin-right-[10px]">
-                <img class="w-5 h-5 margin-right-[0.5em] icon" src="/calendar-dots.png" alt="Icono calendario" />
+        <div class="margin-right-[60px_0] 2xl:margin-right-[20px] 2xl:w-[75%] 2xl:col-start-2 p-2" id="data">
+            <div class="margin-right-[10px] flex">
+                <img class="w-5 h-5 margin-right-[0.5em] icon float-left" src="/calendar-dots.png" alt="Icono calendario" />
                 <h4 class="text-[16px] font-bold">Fecha y Hora</h4>
             </div>
             <p>{days[activityInfo.dow - 1]}, {activityInfo.day} de {months[activityInfo.month -1]} de {activityInfo.year}, {hours}:{minutes}</p>
             <hr />
 
-            <div class="margin-right-[10px]">
+            <div class="margin-right-[10px] flex">
                 <img class="w-5 h-5 margin-right-[0.5em] icon" src="/map-pin.png" alt="Icono lugar" />
-                <h4 class="text-[16px] font-bold">Lugar</h4>
+                <h4 class="text-[16px] font-bold float-left">Lugar</h4>
             </div>
-            <p>{activityInfo.name}</p>
+            <p>{activityInfo.places_name}</p>
             <hr />
 
-            <div class="margin-right-[10px]">
+            <div class="margin-right-[10px] flex">
                 <img class="w-5 h-5 margin-right-[0.5em] icon" src="/users-three.png" alt="Icono clasificación" />
-                <h4 class="text-[16px] font-bold"   >Clasificación</h4>
+                <h4 class="text-[16px] font-bold float-left"   >Clasificación</h4>
             </div>
             <p>{activityInfo.public_name}</p>
             <hr />
 
-            <div class="margin-right-[10px]">
+            <div class="margin-right-[10px] flex">
                 <img class="w-5 h-5 margin-right-[0.5em] icon" src="/file-text.png" alt="Icono reembolso" />
-                <h4 class="text-[16px] font-bold">Políticas de reembolso</h4>
+                <h4 class="text-[16px] font-bold float-left">Políticas de reembolso</h4>
             </div>
             <p>
                 Contacta vía teléfono al 922 346 234

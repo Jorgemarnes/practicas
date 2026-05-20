@@ -1,0 +1,19 @@
+export interface ActivityInfo {
+        description: string;
+        activity_name: string;
+        date_start: string;
+        day: number;
+        dow: number;
+        month: number;
+        year: number;
+        public_name: string;
+        amount: number;
+        places_name: string;
+        url: string;
+    }
+
+export interface ActivityResponse {
+  success: boolean;
+  data: ActivityInfo[];
+  error: string | null;
+}

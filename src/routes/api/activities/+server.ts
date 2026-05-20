@@ -2,8 +2,7 @@ import { json, type RequestEvent } from '@sveltejs/kit';
 import { pool } from '$lib/server/db';
 
 
-
-export const GET = async ({ request }: RequestEvent) => {
+export const GET = async ({ request }: RequestEvent, id: string  = "'de9cc2d3-6bc8-446e-95d8-e738a7d40e54'") => {
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
         console.log('🔍 Ejecutando consulta SQL...');
@@ -11,12 +10,13 @@ export const GET = async ({ request }: RequestEvent) => {
             DAYOFMONTH(sessions.date_start) as day, 
             DAYOFWEEK(sessions.date_start) as dow, MONTH(sessions.date_start) as month, 
             YEAR(sessions.date_start) as year,
-            parameters.name as public_name, price_rates.amount, places.name FROM activities
+            parameters.name as public_name, price_rates.amount, places.name as places_name, images.url FROM activities
             INNER JOIN sessions ON activities.id = sessions.activity_id 
             INNER JOIN parameters ON activities.type_public_id = parameters.id 
             INNER JOIN price_rates ON sessions.id = price_rates.session_id
             INNER JOIN places ON sessions.place_id = places.id
-            WHERE sessions.id = "de9cc2d3-6bc8-446e-95d8-e738a7d40e54"`); 
+            INNER JOIN images ON activities.id = images.table_id
+            WHERE sessions.id = ${id}`) ; 
 
         console.log('✅ Consulta ejecutada correctamente');
         console.log('📦 Datos obtenidos:', rows);
