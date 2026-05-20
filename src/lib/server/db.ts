@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise';
 // Configura tu pool de conexiones para la base de datos MySQL
 export const pool = mysql.createPool({
     host: 'localhost',
-    port: 3309,
+    port: 3306,
     user: 'root', // Reemplaza con tu usuario
     database: 'ticketary', // Reemplaza con el nombre de tu base de datos
     password: '', // Reemplaza con tu contraseña
