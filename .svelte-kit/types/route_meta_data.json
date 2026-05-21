@@ -10,5 +10,9 @@
 	],
 	"/api/users/[id]": [
 		"src/routes/api/users/[id]/+server.ts"
+	],
+	"/sessions/[id]": [
+		"src/routes/sessions/[id]/+page.server.ts",
+		"src/routes/sessions/[id]/+server.ts"
 	]
 }
