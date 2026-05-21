@@ -2,6 +2,7 @@ export interface ActivityInfo {
         description: string;
         activity_name: string;
         date_start: string;
+        id: string;
         day: number;
         dow: number;
         month: number;

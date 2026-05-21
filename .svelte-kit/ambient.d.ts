@@ -39,6 +39,7 @@
  */
 declare module '$env/static/private' {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	export const NVM_INC: string;
 =======
 <<<<<<< HEAD
@@ -88,6 +89,10 @@ declare module '$env/static/private' {
 	export const NODE: string;
 =======
 >>>>>>> f582d268b3710b1ed91cb07c52bc0c6058cc3808
+=======
+	export const VITE_TICKETARY_API: string;
+	export const NVM_INC: string;
+>>>>>>> jesu
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -141,71 +146,7 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const npm_config_prefix: string;
 	export const COLORTERM: string;
->>>>>>> c767eee635a875efd78674a2cf28d08f471a714e
 	export const NODE_ENV: string;
-	export const npm_command: string;
-	export const npm_config_cache: string;
-	export const npm_config_globalconfig: string;
-	export const npm_config_global_prefix: string;
-	export const npm_config_init_module: string;
-	export const npm_config_local_prefix: string;
-	export const npm_config_node_gyp: string;
-	export const npm_config_noproxy: string;
-	export const npm_config_npm_version: string;
-	export const npm_config_prefix: string;
-	export const npm_config_userconfig: string;
-	export const npm_config_user_agent: string;
-	export const npm_execpath: string;
-	export const npm_lifecycle_event: string;
-	export const npm_lifecycle_script: string;
-	export const npm_node_execpath: string;
-	export const npm_package_json: string;
-	export const npm_package_name: string;
-	export const npm_package_version: string;
-	export const NUMBER_OF_PROCESSORS: string;
-	export const NVM_HOME: string;
-	export const NVM_SYMLINK: string;
-	export const OLDPWD: string;
-	export const OLLAMA_HOST: string;
-	export const OLLAMA_ORIGINS: string;
-	export const ONEDRIVE: string;
-	export const ORIGINAL_PATH: string;
-	export const ORIGINAL_TEMP: string;
-	export const ORIGINAL_TMP: string;
-	export const OS: string;
-	export const PATH: string;
-	export const PATHEXT: string;
-	export const PKG_CONFIG_PATH: string;
-	export const PKG_CONFIG_SYSTEM_INCLUDE_PATH: string;
-	export const PKG_CONFIG_SYSTEM_LIBRARY_PATH: string;
-	export const PLINK_PROTOCOL: string;
-	export const PROCESSOR_ARCHITECTURE: string;
-	export const PROCESSOR_IDENTIFIER: string;
-	export const PROCESSOR_LEVEL: string;
-	export const PROCESSOR_REVISION: string;
-	export const PROGRAMDATA: string;
-	export const PROGRAMFILES: string;
-	export const PROGRAMW6432: string;
-	export const PROMPT: string;
-	export const PSMODULEPATH: string;
-	export const PUBLIC: string;
-	export const PWD: string;
-	export const SESSIONNAME: string;
-	export const SHELL: string;
-	export const SHLVL: string;
-	export const SSH_ASKPASS: string;
-	export const SYSTEMDRIVE: string;
-	export const SYSTEMROOT: string;
-	export const TEMP: string;
-	export const TERM: string;
-	export const TMP: string;
-	export const TMPDIR: string;
-	export const USERDOMAIN: string;
-	export const USERDOMAIN_ROAMINGPROFILE: string;
-	export const USERNAME: string;
-	export const USERPROFILE: string;
-	export const WINDIR: string;
-	export const _: string;
 }
 
 /**
@@ -293,6 +234,7 @@ declare module '$env/static/public' {
 declare module '$env/dynamic/private' {
 	export const env: {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		NVM_INC: string;
 =======
 <<<<<<< HEAD
@@ -342,6 +284,10 @@ declare module '$env/dynamic/private' {
 		NODE: string;
 =======
 >>>>>>> f582d268b3710b1ed91cb07c52bc0c6058cc3808
+=======
+		VITE_TICKETARY_API: string;
+		NVM_INC: string;
+>>>>>>> jesu
 		TERM_PROGRAM: string;
 		NODE: string;
 		INIT_CWD: string;
@@ -395,71 +341,7 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		npm_config_prefix: string;
 		COLORTERM: string;
->>>>>>> c767eee635a875efd78674a2cf28d08f471a714e
 		NODE_ENV: string;
-		npm_command: string;
-		npm_config_cache: string;
-		npm_config_globalconfig: string;
-		npm_config_global_prefix: string;
-		npm_config_init_module: string;
-		npm_config_local_prefix: string;
-		npm_config_node_gyp: string;
-		npm_config_noproxy: string;
-		npm_config_npm_version: string;
-		npm_config_prefix: string;
-		npm_config_userconfig: string;
-		npm_config_user_agent: string;
-		npm_execpath: string;
-		npm_lifecycle_event: string;
-		npm_lifecycle_script: string;
-		npm_node_execpath: string;
-		npm_package_json: string;
-		npm_package_name: string;
-		npm_package_version: string;
-		NUMBER_OF_PROCESSORS: string;
-		NVM_HOME: string;
-		NVM_SYMLINK: string;
-		OLDPWD: string;
-		OLLAMA_HOST: string;
-		OLLAMA_ORIGINS: string;
-		ONEDRIVE: string;
-		ORIGINAL_PATH: string;
-		ORIGINAL_TEMP: string;
-		ORIGINAL_TMP: string;
-		OS: string;
-		PATH: string;
-		PATHEXT: string;
-		PKG_CONFIG_PATH: string;
-		PKG_CONFIG_SYSTEM_INCLUDE_PATH: string;
-		PKG_CONFIG_SYSTEM_LIBRARY_PATH: string;
-		PLINK_PROTOCOL: string;
-		PROCESSOR_ARCHITECTURE: string;
-		PROCESSOR_IDENTIFIER: string;
-		PROCESSOR_LEVEL: string;
-		PROCESSOR_REVISION: string;
-		PROGRAMDATA: string;
-		PROGRAMFILES: string;
-		PROGRAMW6432: string;
-		PROMPT: string;
-		PSMODULEPATH: string;
-		PUBLIC: string;
-		PWD: string;
-		SESSIONNAME: string;
-		SHELL: string;
-		SHLVL: string;
-		SSH_ASKPASS: string;
-		SYSTEMDRIVE: string;
-		SYSTEMROOT: string;
-		TEMP: string;
-		TERM: string;
-		TMP: string;
-		TMPDIR: string;
-		USERDOMAIN: string;
-		USERDOMAIN_ROAMINGPROFILE: string;
-		USERNAME: string;
-		USERPROFILE: string;
-		WINDIR: string;
-		_: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
