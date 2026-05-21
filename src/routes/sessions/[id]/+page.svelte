@@ -20,9 +20,9 @@
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
 
-    const imagesUrl = activityInfo.url;
-    const image = JSON.parse(imagesUrl);
-    const url = image.small;
+    let imgUrl = JSON.parse(activityInfo.url);
+    let img = $derived((`${import.meta.env.VITE_TICKETARY_API}${imgUrl['big']}`));
+    console.log(imgUrl['big']);
 
     let boton: HTMLButtonElement | null = null;
     let ubi: HTMLAnchorElement | null = null;
@@ -62,12 +62,12 @@
 </svelte:head>
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
-        <img src='/foto.jpg' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
+        <img src='{img}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
     </div>
 
     <div id="container" class="w-screen 2xl:w-[40%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
         <div id="cabecera" class="w-full 2xl:w-full flex justify-center items-center">
-            <img src='/foto.jpg' alt='Portada de "El postre"' class = "w-full 2xl:w-[50%] rounded-[1mm]"/>
+            <img src='{img}' alt='Portada de "El postre"' class = "w-full 2xl:w-[50%] rounded-[1mm]"/>
         </div>
 
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">

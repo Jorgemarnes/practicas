@@ -15,3 +15,5 @@ export const load = async ({ fetch, params }: {fetch:any, params:any}) => {
         return { activities: [], error: (error as Error).message };
     }
 };
+
+
