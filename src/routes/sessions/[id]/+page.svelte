@@ -22,7 +22,6 @@
 
     let imgUrl = JSON.parse(activityInfo.url);
     let img = $derived((`${import.meta.env.VITE_TICKETARY_API}${imgUrl['big']}`));
-    console.log(imgUrl['big']);
 
     let boton: HTMLButtonElement | null = null;
     let ubi: HTMLAnchorElement | null = null;
@@ -72,7 +71,7 @@
 
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">
             <div id="titulo_info" class="ml-5 justify-around conten-center p-4">
-                <h1 class="text-2xl font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
+                <h1 class="text-xl font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
                 <h1 class="text-2xl font-bold">{activityInfo.activity_name}</h1>
                 <div id="ubiprecio" class="grid grid-cols-[50fr_50fr] gap-5">
                     <a
