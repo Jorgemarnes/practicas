@@ -65,8 +65,8 @@
     </div>
 
     <div id="container" class="w-screen 2xl:w-[40%] bg-[#fbfbfb] rounded-[3mm] relative m-[0_auto] justify-center z-20 p-right-5 p-left-5">
-        <div id="cabecera" class="w-full 2xl:w-full flex justify-center items-center">
-            <img src='{img}' alt='Portada de "El postre"' class = "w-full 2xl:w-[50%] rounded-[1mm]"/>
+        <div id="cabecera" class="w-full bg-amber-200 h-[850px] 2xl:w-full flex justify-center items-center">
+            <img src='{img}' alt='Portada de "El postre"' class = " 2xl:w-[50%] rounded-[1mm]"/>
         </div>
 
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center bg-[#fbfbfb] rounded-[5mm] rounded-tl-none rounded-tr-none gap-5">
