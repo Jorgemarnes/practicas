@@ -11,13 +11,8 @@
 	"/api/users/[id]": [
 		"src/routes/api/users/[id]/+server.ts"
 	],
-<<<<<<< HEAD
-	"/event/[id]": [
-		"src/routes/event/[id]/+page.js"
-=======
 	"/sessions/[id]": [
 		"src/routes/sessions/[id]/+page.server.ts",
 		"src/routes/sessions/[id]/+server.ts"
->>>>>>> jesu
 	]
 }
