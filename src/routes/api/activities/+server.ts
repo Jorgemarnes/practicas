@@ -19,8 +19,7 @@ export const GET = async ({ url }: RequestEvent) => {
             INNER JOIN places ON sessions.place_id = places.id
             INNER JOIN images ON images.id = (
             SELECT id FROM images WHERE table_id = activities.id LIMIT 1)
-            WHERE date_start > NOW()
-            ORDER BY date_start ASC`;
+            WHERE date_start > NOW()`;
             
     let params = [];
 
@@ -28,6 +27,8 @@ export const GET = async ({ url }: RequestEvent) => {
         query += ' AND sessions.id = ?';
         params.push(id);
     }
+
+    query += ' ORDER BY sessions.date_start ASC';
 
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
