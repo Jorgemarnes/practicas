@@ -9,6 +9,8 @@
     const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     let filtroSitios = $state<string[]>([]);
     let filtroFecha = $state('');
+    const min_date = new Date(Date.now()).toISOString().split('T')[0];
+    console.log(min_date);
 
     let isOpen = $state(false);
 
@@ -23,7 +25,8 @@
             const fechaEvento = filtrados.date_start.split('T')[0];
             const casaSitio =
                 filtroSitios.length === 0 || filtroSitios.includes(filtrados.places_name);
-            const casaFecha = !filtroFecha || fechaEvento === filtroFecha;
+            filtroFecha.split('/').join('');
+            const casaFecha = !filtroFecha || new Date(fechaEvento) <= new Date(filtroFecha);
             return casaSitio && casaFecha;
         })
     );
@@ -57,7 +60,9 @@
                     {localidad}
                 </label>
             {/each}
-            <input type="date" class="ml-10 border rounded bg-amber-50 pl-2 pr-2"bind:value={filtroFecha}>
+            <label class="ml-10" for="fecha">Hasta:</label>
+            <input id="fecha" type="date" min="{min_date}" bind:value={filtroFecha} 
+            class="border rounded bg-amber-50 pl-2 pr-2"/>
             <br>
             <button onclick={clearFiltros} class="rounded bg-gray-300 pl-2 pr-2">Limpiar filtros</button>
             </div>
