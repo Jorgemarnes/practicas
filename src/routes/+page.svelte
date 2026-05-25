@@ -3,6 +3,7 @@
     import type { ActivityInfo } from '$lib/model';
     import { page } from '$app/stores';
     import '$lib/style.css';
+    import { slide } from 'svelte/transition';
 
 
     let { data } = $props();
@@ -34,55 +35,62 @@
     }
 
     function toggleMenu() {
-        isOpen = !isOpen;
+        isOpen = !isOpen;   
+
     }
 
 </script>
 
-<div class="w-full h-full bg-gray-400 p-5">
-    <h1 class="flex m-5 font-bold text-[50px] sm:text-[50px] sm:justify-center">Sesiones:</h1>
-    <div class="m-2.5 align-center 
-    flex-wrap gap-4 bg-gray-200 p-5 rounded-lg flex">
-        <fieldset>
-            <button class ="text-2xl font-bold hover:underline p-2 rounded-xl" onclick={toggleMenu}>Filtros</button>
-             {#if isOpen}
-            <div class="m-2.5 align-center 
-    flex-wrap gap-4 bg-gray-200 rounded-lg flex">
-            {#each localidades as localidad}
-                <label class="float-left">
-                    <input
-                        type="checkbox"
-                        value={localidad}
-                        bind:group={filtroSitios}/>
-                    {localidad}
-                </label>
-            {/each}
-            <input type="date" class="ml-10 border rounded bg-amber-50 pl-2 pr-2"bind:value={filtroFecha}>
-            <br>
-            <button onclick={clearFiltros} class="rounded bg-gray-300 pl-2 pr-2">Limpiar filtros</button>
-            </div>
-            {/if}
-        </fieldset>
-        
-    </div>
+    <div class="w-screen h-full bg-gray-400 p-5 mx-0 overflow-x-hidden">
+        <h1 class="flex mb-5 font-bold text-[50px] sm:text-[50px] sm:justify-center">Sesiones:</h1>
+        <div class="mb-2.5 align-center 
+        flex-wrap gap-4 bg-gray-200 p-5  flex z-5">
+            <fieldset>
+                <button class ="text-xl font-bold hover:underline p-2" onclick={toggleMenu}>Filtros</button>
+                {#if isOpen}
+                <div id ="filters" class="m-2.5 align-center 
+        flex-wrap gap-4 bg-gray-200 flex"
+        transition:slide={{ duration: 300}}>
+                <div class="bg-blue-50 border p-5 gap-5">
+                {#each localidades as localidad}
+                    <label class="float-left ml-2 mr-2">
+                        <input
+                            type="checkbox"
+                            value={localidad}
+                            bind:group={filtroSitios}/>
+                        {localidad}
+                    </label>
+                {/each}
+                </div>
+                <input type="date" class="border bg-blue-50 pl-2 pr-2"bind:value={filtroFecha}>
+                <div class="basis-full"></div>
+                <button onclick={clearFiltros} class=" bg-gray-300 p-2">Limpiar filtros</button>
+                </div>
+                {/if}
+            </fieldset>
+            
+        </div>
     
     
     
-    <div class="m-2.5 justify-evenly align-center 
+    <div class="justify-items-center align-center 
     flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
-    gap-4 bg-gray-200 p-5 rounded-lg">
+    gap-4 bg-gray-200 p-5">
         {#each eventosFiltrados as activity}
-            <a href={`/sessions/${activity.id}`} class="block m-2.5 p-2.5 hover:scale-105 transition 
-                duration-300 active:bg-blue-300 active:scale-110 bg-gray-300 rounded-[3mm]">
-                <div class="ml-2 mr-2">
-                    <span class="text-5 sm:text-[24px] active:scale-110 font-bold"
+            <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition 
+                duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50">
+                <div class="h-[60%] bg-amber-200 overflow-hidden ">
+                    <img src={`${import.meta.env.VITE_TICKETARY_API}${JSON.parse(activity.url)['original']}`} 
+                    alt={activity.activity_name} class="w-full h-full object-cover scale-125" />
+                </div>
+                <div class="ml-2 mr-2 h-[40%] pt-2">
+                    <span class="text-5 sm:text-[16px] active:scale-110 font-bold"
                     >{activity.activity_name}</span>
-                    <hr class="mt-2 mb-2">
-                    <span class="text-[16px] sm:text-[18px] italic"
+                    <hr class="mt-1 mb-1">
+                    <span class="text-[16px] sm:text-[16px] italic"
                     >{activity.day} de {MONTHS[activity.month - 1]} de {activity.year}</span>
                 </div>
-                <img src={`${import.meta.env.VITE_TICKETARY_API}${JSON.parse(activity.url)['original']}`} 
-                alt={activity.activity_name} class="w-full h-75 object-cover rounded-[3mm] mt-2.5" />
+                
             </a>
         {/each}
     </div>

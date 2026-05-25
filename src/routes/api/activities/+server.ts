@@ -2,6 +2,7 @@ import { json, type RequestEvent } from '@sveltejs/kit';
 import { pool } from '$lib/server/db';
 
 
+
 export const GET = async ({ url }: RequestEvent) => {
     const id = url.searchParams.get('id');
 
@@ -27,6 +28,7 @@ export const GET = async ({ url }: RequestEvent) => {
         query += ' AND sessions.id = ?';
         params.push(id);
     }
+    query += ' ORDER BY date_start ASC;'
 
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
