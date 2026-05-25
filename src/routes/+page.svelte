@@ -10,6 +10,8 @@
     let filtroSitios = $state<string[]>([]);
     let filtroFecha = $state('');
 
+    let isOpen = $state(false);
+
     const localidades = $derived(
         [...new Set(data.activities.map((activity: ActivityInfo) => activity.places_name))].sort()
     );
@@ -31,26 +33,41 @@
         filtroFecha = '';
     }
 
+    function toggleMenu() {
+        isOpen = !isOpen;
+    }
+
 </script>
 
 <div class="w-full h-full bg-gray-400 p-5">
     <h1 class="flex m-5 font-bold text-[50px] sm:text-[50px] sm:justify-center">Sesiones:</h1>
-    <fieldset>
-        <legend>Filtros</legend>
-        {#each localidades as localidad}
-            <label>
-                <input
-                    type="checkbox"
-                    value={localidad}
-                    bind:group={filtroSitios}/>
-                {localidad}
-            </label>
-        {/each}
-    </fieldset>
-
-    <input type="date" bind:value={filtroFecha}>
-
-    <button onclick={clearFiltros}>Limpiar filtros</button>
+    <div class="m-2.5 align-center 
+    flex-wrap gap-4 bg-gray-200 p-5 rounded-lg flex">
+        <fieldset>
+            <button class ="text-2xl font-bold hover:underline p-2 rounded-xl" onclick={toggleMenu}>Filtros</button>
+             {#if isOpen}
+            <div class="m-2.5 align-center 
+    flex-wrap gap-4 bg-gray-200 rounded-lg flex">
+            {#each localidades as localidad}
+                <label class="float-left">
+                    <input
+                        type="checkbox"
+                        value={localidad}
+                        bind:group={filtroSitios}/>
+                    {localidad}
+                </label>
+            {/each}
+            <input type="date" class="ml-10 border rounded bg-amber-50 pl-2 pr-2"bind:value={filtroFecha}>
+            <br>
+            <button onclick={clearFiltros} class="rounded bg-gray-300 pl-2 pr-2">Limpiar filtros</button>
+            </div>
+            {/if}
+        </fieldset>
+        
+    </div>
+    
+    
+    
     <div class="m-2.5 justify-evenly align-center 
     flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
     gap-4 bg-gray-200 p-5 rounded-lg">
