@@ -29,23 +29,26 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-		RouteId(): "/" | "/api" | "/api/activities" | "/api/users" | "/api/users/[id]" | "/event" | "/sessions" | "/sessions/events" | "/sessions/[id]";
+		RouteId(): "/" | "/api" | "/api/activities" | "/api/events" | "/api/rooms" | "/api/sessions" | "/api/sessions/[id]" | "/api/users" | "/event" | "/sessions" | "/sessions/events" | "/sessions/[id]";
 		RouteParams(): {
-			"/api/users/[id]": { id: string };
+			"/api/sessions/[id]": { id: string };
 			"/sessions/[id]": { id: string }
 		};
 		LayoutParams(): {
 			"/": { id?: string };
 			"/api": { id?: string };
 			"/api/activities": Record<string, never>;
-			"/api/users": { id?: string };
-			"/api/users/[id]": { id: string };
+			"/api/events": Record<string, never>;
+			"/api/rooms": Record<string, never>;
+			"/api/sessions": { id?: string };
+			"/api/sessions/[id]": { id: string };
+			"/api/users": Record<string, never>;
 			"/event": Record<string, never>;
 			"/sessions": { id?: string };
 			"/sessions/events": Record<string, never>;
 			"/sessions/[id]": { id: string }
 		};
-		Pathname(): "/" | "/api/activities" | "/api/users" | `/api/users/${string}` & {} | `/sessions/${string}` & {};
+		Pathname(): "/" | "/api/activities" | "/api/rooms" | "/api/sessions" | `/sessions/${string}` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/calendar-dots.png" | "/file-text.png" | "/foto.jpg" | "/map-pin.png" | "/robots.txt" | "/users-three.png" | string & {};
 	}

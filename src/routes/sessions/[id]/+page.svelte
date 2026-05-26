@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { ActivityInfo } from '$lib/model';
+    import type { RoomConfig } from '$lib/model/room_config.model.js';
     import { page } from '$app/stores';
     import '$lib/style.css';
     let { data } = $props();
@@ -8,6 +9,7 @@
 
     const info = $page.data as {
         activities: ActivityInfo[];
+        room: RoomConfig[];
         error: string | null;
     };
 
@@ -16,12 +18,17 @@
     
 
     const activityInfo = info.activities[0];
+    const roomInfo = info.room[0];
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
 
-    let imgUrl = JSON.parse(activityInfo.url);
-    let img = $derived((`${import.meta.env.VITE_TICKETARY_API}${imgUrl['big']}`));
+    let activityUrl = JSON.parse(activityInfo.url);
+    let activityImg = $derived((`${import.meta.env.VITE_TICKETARY_API}${activityUrl['big']}`));
+
+    let roomUrl = JSON.parse(roomInfo.url);
+    let roomImg = $derived((`${import.meta.env.VITE_TICKETARY_API}${roomUrl['big']}`));
+
 
     let boton: HTMLButtonElement | null = null;
     let ubi: HTMLAnchorElement | null = null;
@@ -53,6 +60,8 @@
         }
     }
 
+console.log('roomImg')
+console.log()
     
 </script>
 
@@ -61,27 +70,23 @@
 </svelte:head>
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
-        <img src='{img}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
+        <img src='{activityImg}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
     </div>
 
     <div id="container" class="w-screen 2xl:w-[40%] bg-[#fbfbfb] rounded-lg relative mr-5 ml-5 justify-center z-20 p-right-5 p-left-5">
         <div id="cabecera" class="w-full h-full 2xl:w-full flex justify-center items-center">
-            <img src='{img}' alt='Portada de "El postre"' class = " w-fit rounded-[1mm]"/>
+            <img src='{activityImg}' alt='Portada de "El postre"' class = " w-fit rounded-[1mm]"/>
         </div>
 
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center mr-2 ml-2 mt-2 lg:bg-gray-200 lg:rounded-lg" >
             <div id="titulo_info" class="justify-around conten-center p-4 bg-gray-200 rounded-lg gap-5 mb-2">
                 <h1 class="text-l font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
-                <a
+                <p
                         class="text-opacity-60 text-black text-[14px] content-center self-end italic"
                         id="ubicacion"
-                        bind:this={ubi}
-                        href="https://duckduckgo.com/?q=teatro+cine+los+realejos&iaxm=maps&source=placesy"
-                        onmouseenter={animacion_ubi}
-                        onmouseleave={animacion_ubi}
                     >
                         {activityInfo.places_name}
-                    </a>
+            </p>
                 <h1 class="text-3xl font-bold mt-1 mb-1">{activityInfo.activity_name}</h1>
                 <div id="ubiprecio" class="grid grid-cols-[1fr] gap-5">
                     {#if activityInfo.amount === 0}
@@ -102,6 +107,11 @@
             </div>
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
+        <div>
+            <div>
+                <img src='{roomImg}' alt='Holi'/>
+            </div>
+        </div>
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>

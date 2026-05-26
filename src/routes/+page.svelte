@@ -10,6 +10,7 @@
     const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     let filtroSitios = $state<string[]>([]);
     let filtroFecha = $state('');
+    const min_date = new Date(Date.now()).toISOString().split('T')[0];
 
     let isOpen = $state(false);
 
@@ -24,7 +25,8 @@
             const fechaEvento = filtrados.date_start.split('T')[0];
             const casaSitio =
                 filtroSitios.length === 0 || filtroSitios.includes(filtrados.places_name);
-            const casaFecha = !filtroFecha || fechaEvento === filtroFecha;
+            filtroFecha.split('/').join('');
+            const casaFecha = !filtroFecha || new Date(fechaEvento) <= new Date(filtroFecha);
             return casaSitio && casaFecha;
         })
     );
@@ -38,6 +40,7 @@
         isOpen = !isOpen;   
 
     }
+
 
 </script>
 
@@ -62,7 +65,9 @@
                     </label>
                 {/each}
                 </div>
-                <input type="date" class="border bg-blue-50 pl-2 pr-2"bind:value={filtroFecha}>
+                <label class="ml-10 self-center text-[1px]" for="fecha">Hasta:</label>
+                <input id="fecha" type="date" min="{min_date}" bind:value={filtroFecha}
+                class="border rounded bg-blue-50 pl-2 pr-2"/>
                 <div class="basis-full"></div>
                 <button onclick={clearFiltros} class=" bg-gray-300 p-2">Limpiar filtros</button>
                 </div>
@@ -74,13 +79,13 @@
     
     
     <div class="justify-items-center align-center 
-    flex-wrap grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
+    flex-wrap grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
     gap-4 bg-gray-200 p-5">
         {#each eventosFiltrados as activity}
             <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition 
-                duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50">
+                duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50 hover:bg-black">
                 <div class="h-[60%] bg-amber-200 overflow-hidden ">
-                    <img src={`${import.meta.env.VITE_TICKETARY_API}${JSON.parse(activity.url)['original']}`} 
+                    <img src={`${import.meta.env.VITE_TICKETARY_API}${JSON.parse(activity.url)['medium']}`} 
                     alt={activity.activity_name} class="w-full h-full object-cover scale-125" />
                 </div>
                 <div class="ml-2 mr-2 h-[40%] pt-2">

@@ -10,7 +10,7 @@ export interface ActivityInfo {
         public_name: string;
         amount: number;
         places_name: string;
-        url: string;
+        url: string | null;
     }
 
 export interface ActivityResponse {
