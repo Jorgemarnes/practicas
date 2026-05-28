@@ -48,19 +48,26 @@ declare module '$env/static/private' {
 	export const SHELL: string;
 	export const TMPDIR: string;
 	export const npm_config_global_prefix: string;
+	export const VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
 	export const TERM_PROGRAM_VERSION: string;
+<<<<<<< HEAD
 	export const ORIGINAL_XDG_CURRENT_DESKTOP: string;
+=======
+	export const ZDOTDIR: string;
+>>>>>>> 90ac50e648dd5a25b50c79d420ba0ca0ce3e7b78
 	export const MallocNanoZone: string;
 	export const COLOR: string;
 	export const npm_config_noproxy: string;
 	export const npm_config_local_prefix: string;
 	export const ZSH: string;
 	export const NVM_DIR: string;
+	export const BLACKBOX_ACTIVE: string;
 	export const USER: string;
 	export const LS_COLORS: string;
 	export const COMMAND_MODE: string;
 	export const npm_config_globalconfig: string;
 	export const SSH_AUTH_SOCK: string;
+	export const VSCODE_PROFILE_INITIALIZED: string;
 	export const __CF_USER_TEXT_ENCODING: string;
 	export const npm_execpath: string;
 	export const PAGER: string;
@@ -70,6 +77,7 @@ declare module '$env/static/private' {
 	export const _: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
+	export const USER_ZDOTDIR: string;
 	export const __CFBundleIdentifier: string;
 	export const npm_command: string;
 	export const PWD: string;
@@ -83,6 +91,7 @@ declare module '$env/static/private' {
 	export const npm_config_node_gyp: string;
 	export const npm_package_version: string;
 	export const XPC_SERVICE_NAME: string;
+	export const VSCODE_INJECTION: string;
 	export const SHLVL: string;
 	export const HOME: string;
 	export const VSCODE_GIT_ASKPASS_MAIN: string;
@@ -195,19 +204,26 @@ declare module '$env/dynamic/private' {
 		SHELL: string;
 		TMPDIR: string;
 		npm_config_global_prefix: string;
+		VSCODE_PYTHON_AUTOACTIVATE_GUARD: string;
 		TERM_PROGRAM_VERSION: string;
+<<<<<<< HEAD
 		ORIGINAL_XDG_CURRENT_DESKTOP: string;
+=======
+		ZDOTDIR: string;
+>>>>>>> 90ac50e648dd5a25b50c79d420ba0ca0ce3e7b78
 		MallocNanoZone: string;
 		COLOR: string;
 		npm_config_noproxy: string;
 		npm_config_local_prefix: string;
 		ZSH: string;
 		NVM_DIR: string;
+		BLACKBOX_ACTIVE: string;
 		USER: string;
 		LS_COLORS: string;
 		COMMAND_MODE: string;
 		npm_config_globalconfig: string;
 		SSH_AUTH_SOCK: string;
+		VSCODE_PROFILE_INITIALIZED: string;
 		__CF_USER_TEXT_ENCODING: string;
 		npm_execpath: string;
 		PAGER: string;
@@ -217,6 +233,7 @@ declare module '$env/dynamic/private' {
 		_: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
+		USER_ZDOTDIR: string;
 		__CFBundleIdentifier: string;
 		npm_command: string;
 		PWD: string;
@@ -230,6 +247,7 @@ declare module '$env/dynamic/private' {
 		npm_config_node_gyp: string;
 		npm_package_version: string;
 		XPC_SERVICE_NAME: string;
+		VSCODE_INJECTION: string;
 		SHLVL: string;
 		HOME: string;
 		VSCODE_GIT_ASKPASS_MAIN: string;
