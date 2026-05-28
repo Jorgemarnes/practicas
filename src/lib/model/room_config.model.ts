@@ -1,5 +1,5 @@
 export interface RoomConfig {
-        map_room: string;
+        room_map: string;
         amount: number;
         label: string;
         map_info: string;

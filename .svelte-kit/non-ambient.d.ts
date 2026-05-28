@@ -29,30 +29,16 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-<<<<<<< HEAD
-		RouteId(): "/" | "/api" | "/api/activities" | "/api/users" | "/api/users/[id]" | "/sessions" | "/sessions/[id]";
-=======
-		RouteId(): "/" | "/api" | "/api/activities" | "/api/events" | "/api/rooms" | "/api/sessions" | "/api/sessions/[id]" | "/api/users" | "/event" | "/sessions" | "/sessions/events" | "/sessions/[id]";
->>>>>>> 90ac50e648dd5a25b50c79d420ba0ca0ce3e7b78
+		RouteId(): "/" | "/api" | "/api/activities" | "/api/rooms" | "/api/sessions" | "/sessions" | "/sessions/[id]";
 		RouteParams(): {
-			"/api/sessions/[id]": { id: string };
 			"/sessions/[id]": { id: string }
 		};
 		LayoutParams(): {
 			"/": { id?: string };
-			"/api": { id?: string };
+			"/api": Record<string, never>;
 			"/api/activities": Record<string, never>;
-<<<<<<< HEAD
-			"/api/users": { id?: string };
-			"/api/users/[id]": { id: string };
-=======
-			"/api/events": Record<string, never>;
 			"/api/rooms": Record<string, never>;
-			"/api/sessions": { id?: string };
-			"/api/sessions/[id]": { id: string };
-			"/api/users": Record<string, never>;
-			"/event": Record<string, never>;
->>>>>>> 90ac50e648dd5a25b50c79d420ba0ca0ce3e7b78
+			"/api/sessions": Record<string, never>;
 			"/sessions": { id?: string };
 			"/sessions/[id]": { id: string }
 		};

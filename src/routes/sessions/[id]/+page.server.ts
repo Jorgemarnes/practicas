@@ -4,8 +4,8 @@ import type { RoomConfig, RoomConfigResponse } from '$lib/model/room_config.mode
 
 export const load = async ({ fetch, params }: {fetch:any, params:any}) => {
     try {
-        const info_resp = await fetch(`/api/sessions?id=${params.id}`);
-        const config_resp = await fetch(`/api/sessions?id=${params.id}`);
+        const info_resp = await fetch(`/api/activities?id=${params.id}`);
+        const config_resp = await fetch(`/api/rooms?id=${params.id}`);
         const activityData: ActivityResponse = await info_resp.json();
         const roomData: RoomConfigResponse = await config_resp.json();
 
