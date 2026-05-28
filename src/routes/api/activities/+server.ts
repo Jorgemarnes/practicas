@@ -35,8 +35,6 @@ export const GET = async ({ url }: RequestEvent) => {
     }
     query += ' ORDER BY date_start ASC;'
 
-    query += ' ORDER BY sessions.date_start ASC';
-
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
         console.log('🔍 Ejecutando consulta SQL...');
@@ -62,5 +60,3 @@ export const GET = async ({ url }: RequestEvent) => {
         return json(errorResponse, { status: 500 });
     }
 };
-
-
