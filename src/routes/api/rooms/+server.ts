@@ -7,35 +7,21 @@ export const GET = async ({ url }: RequestEvent) => {
     const id = url.searchParams.get('id');
 
     let query = `SELECT 
-                sessions.id as id,
-                activities.description, 
-                activities.name as activity_name, 
-                sessions.date_start,
-                DAYOFMONTH(sessions.date_start) as day, 
-                DAYOFWEEK(sessions.date_start) as dow,
-                MONTH(sessions.date_start) as month, 
-                YEAR(sessions.date_start) as year,
-                places.name as places_name,
-                images.url
-            FROM activities
-                INNER JOIN sessions ON activities.id = sessions.activity_id 
-                INNER JOIN places ON sessions.place_id = places.id
-                INNER JOIN images ON images.id = (
-                SELECT id FROM images WHERE table_id = activities.id LIMIT 1
-                )
-            WHERE  date_start > NOW()
-                AND sessions.hidden = 0
-                AND activities.name != 'Demo Realejos'`;
+                    images.url as room_map,
+                    price_rates.amount,
+                    room_areas.label,
+                    rooms_config.map_info
+                FROM sessions
+                    INNER JOIN rooms_config ON rooms_config.id = sessions.config_id
+                    INNER JOIN images_room_config ON images_room_config.rooms_config_id = rooms_config.id
+                    INNER JOIN images ON images.id = images_room_config.image_id
+                    INNER JOIN price_rates ON price_rates.session_id = sessions.id
+                    INNER JOIN room_areas ON room_areas.room_conf_id = rooms_config.id
+                WHERE sessions.id = ?`;
             
-    let params = [];
-
-    if (id) {
-        query += ' AND sessions.id = ?';
+        let params = [];
         params.push(id);
-    }
-    query += ' ORDER BY date_start ASC;'
-
-    query += ' ORDER BY sessions.date_start ASC';
+    
 
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
@@ -60,7 +46,6 @@ export const GET = async ({ url }: RequestEvent) => {
         console.log('📤 Respondiendo con error:', errorResponse);
         
         return json(errorResponse, { status: 500 });
-    }
+    };
+
 };
-
-

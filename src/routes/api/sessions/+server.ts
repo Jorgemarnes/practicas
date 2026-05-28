@@ -6,36 +6,32 @@ import { pool } from '$lib/server/db';
 export const GET = async ({ url }: RequestEvent) => {
     const id = url.searchParams.get('id');
 
-    let query = `SELECT 
-                sessions.id as id,
-                activities.description, 
-                activities.name as activity_name, 
-                sessions.date_start,
+    let query = `SELECT activities.description, activities.name as activity_name, sessions.date_start,
                 DAYOFMONTH(sessions.date_start) as day, 
-                DAYOFWEEK(sessions.date_start) as dow,
-                MONTH(sessions.date_start) as month, 
-                YEAR(sessions.date_start) as year,
-                places.name as places_name,
-                images.url
-            FROM activities
-                INNER JOIN sessions ON activities.id = sessions.activity_id 
-                INNER JOIN places ON sessions.place_id = places.id
-                INNER JOIN images ON images.id = (
-                SELECT id FROM images WHERE table_id = activities.id LIMIT 1
-                )
-            WHERE  date_start > NOW()
-                AND sessions.hidden = 0
-                AND activities.name != 'Demo Realejos'`;
+                    DAYOFWEEK(sessions.date_start) as dow, 
+                    MONTH(sessions.date_start) as month, 
+                    YEAR(sessions.date_start) as year,
+                    parameters.name as public_name, 
+                    price_rates.amount, 
+                    places.name as places_name, 
+                    images.url 
+                FROM activities
+                    INNER JOIN sessions ON activities.id = sessions.activity_id 
+                    INNER JOIN parameters ON activities.type_public_id = parameters.id 
+                    INNER JOIN price_rates ON price_rates.id = (
+                    SELECT id FROM price_rates WHERE session_id = sessions.id LIMIT 1
+                    )
+                    INNER JOIN places ON sessions.place_id = places.id
+                    INNER JOIN images ON images.id = (
+                    SELECT id FROM images WHERE table_id = activities.id LIMIT 1
+                    )
+                WHERE sessions.date_start > NOW() AND sessions.id = '${id}'`;
             
     let params = [];
 
     if (id) {
-        query += ' AND sessions.id = ?';
         params.push(id);
     }
-    query += ' ORDER BY date_start ASC;'
-
-    query += ' ORDER BY sessions.date_start ASC';
 
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
@@ -62,5 +58,7 @@ export const GET = async ({ url }: RequestEvent) => {
         return json(errorResponse, { status: 500 });
     }
 };
+
+
 
 
