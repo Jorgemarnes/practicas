@@ -4,6 +4,7 @@
     import { page } from '$app/stores';
     import '$lib/style.css';
     let { data } = $props();
+    import { slide } from 'svelte/transition';
 
 
 
@@ -56,6 +57,12 @@
             }
         }
     };
+
+    let is_open = $state(false);
+
+    function toggleBuy() {
+        is_open = !is_open;
+    }
 </script>
 
 <svelte:head>
@@ -94,19 +101,20 @@
                     class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-115 duration-300 lg:hover:underline  text-white text-[20px] font-bold py-3 px-12 margin-right-[5px] rounded-lg"
                     id="entradas"
                     bind:this={boton}
-                >
+                onclick={toggleBuy}>
                     Entradas
                 </button>
             </div>
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
-        <div class="flex justify-center">
-            <div style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 20px); grid-template-rows: repeat({rows}, 20px);" class="grid h-fit bg-contain bg-no-repeat bg-center w-fit">
+        {#if is_open}
+        <div class="flex justify-center max-w-600px h-auto" transition:slide={{ duration: 300}}>
+            <div style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 20px); grid-template-rows: repeat({rows}, 20px);" class="grid h-auto bg-contain bg-no-repeat bg-center max-w-300">
             {#each grid_info as row}
                 {#each row as seat}
                     {#if seat.type === 'seat'}
                         <button aria-label="none" onclick={() => toggleSeat(`${seat.x}${seat.y}`)} class="row-start-{seat.x} col-start-{seat.y} 
-                        rounded-full flex justify-center items-center hover:opacity-60 active:scale-110"><svg id="{seat.x}{seat.y}" class="hover:fill-amber-200∫" 
+                        rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" ><svg id="{seat.x}{seat.y}" class="hover:fill-amber-200∫" 
                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="fill: black;" viewBox="0 0 256 256">
                         <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
                         132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
@@ -119,6 +127,7 @@
             {/each}
             </div>
         </div>
+        {/if}
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
