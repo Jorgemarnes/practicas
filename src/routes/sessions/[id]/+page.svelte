@@ -5,6 +5,10 @@
     import '$lib/style.css';
     let { data } = $props();
     import { slide } from 'svelte/transition';
+    import { draggable } from '@neodrag/svelte';
+  import type { NumericRange } from '@sveltejs/kit';
+
+
 
 
 
@@ -14,11 +18,14 @@
     
     // svelte-ignore state_referenced_locally
     let info = $state(data);
+    const rooms = info.room;
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
+    let max_tickets = activityInfo.ticket_max_session
+    
 
     let activityUrl = JSON.parse(activityInfo.url || '{}');
     let activityImg = $derived(`${import.meta.env.VITE_TICKETARY_API}${activityUrl['big']}`);
@@ -44,25 +51,50 @@
 
     let grid_info = room['grid']
 
-
     let boton: HTMLButtonElement | null = null;
 
     function toggleSeat(id : string) {
         const element = document.getElementById(id);
         if (element) {
-            if (element.style.fill === 'black') {
-                element.style.fill = 'green';
-            } else {
-                element.style.fill = 'black';
-            }
+            if 
+                    selected_seats += 1;
+                    element.style.fill = 'green';
         }
     };
 
     let is_open = $state(false);
 
+    let selected_seats: number= $state(0);
+
+
     function toggleBuy() {
         is_open = !is_open;
     }
+
+    let increment = 1
+    function zoom(id: string) {
+        const grid = document.getElementById('grid'); 
+            if (id === 'In') {
+                increment += 0.3
+                grid.style.zoom = increment;
+            } else {
+                increment -= 0.3
+                grid.style.zoom = increment;
+            } 
+    }
+
+    let a_colors: Record<string, string> = {}
+    for (let i = 0; i < room.areas.length; i++) {
+        a_colors[room.areas[i].id] = room.areas[i].color
+    }
+
+
+
+
+
+
+
+
 </script>
 
 <svelte:head>
@@ -89,7 +121,7 @@
             </p>
                 <h1 class="text-3xl font-bold mt-1 mb-1">{activityInfo.activity_name}</h1>
                 <div id="ubiprecio" class="grid grid-cols-[1fr] gap-5">
-                    {#if activityInfo.amount === 0}
+                    {#if roomInfo.amount === 0}
                         <b class="text-xl font-normal">Gratuito</b>
                     {:else}
                         <b class="text-xl font-normal">{roomInfo?.amount}€</b>
@@ -108,24 +140,42 @@
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
         {#if is_open}
-        <div class="flex justify-center max-w-600px h-auto" transition:slide={{ duration: 300}}>
-            <div style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 20px); grid-template-rows: repeat({rows}, 20px);" class="grid h-auto bg-contain bg-no-repeat bg-center max-w-300">
+        <div  transition:slide={{ duration: 300}}>
+        <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl">
+        <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
+         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('In')}>+</button>
+        <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
+         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('Out')}>-</button>
+            <div id="grid" style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 13px); grid-template-rows: repeat({rows}, 13px);" class="grid h-auto bg-contain bg-no-repeat bg-center origin-[0,0] will-change-transform" use:draggable={{ axis: 'both' }}>
             {#each grid_info as row}
                 {#each row as seat}
                     {#if seat.type === 'seat'}
-                        <button aria-label="none" onclick={() => toggleSeat(`${seat.x}${seat.y}`)} class="row-start-{seat.x} col-start-{seat.y} 
-                        rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" ><svg id="{seat.x}{seat.y}" class="hover:fill-amber-200∫" 
-                        xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="fill: black;" viewBox="0 0 256 256">
-                        <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
-                        132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
-                        40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
-                        </path></svg></button>
+                        {#if seat.areaId in a_colors}
+                            <button aria-label="none" onmousedown={() => toggleSeat(`${seat.x}${seat.y}`)} class="row-start-{seat.x} col-start-{seat.y} 
+                            rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" ><svg id="{seat.id}"
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256">
+                            <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
+                            132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
+                            40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
+                            </path></svg></button>
+                        {/if}
                     {:else}
                         <button aria-label="none"></button>
                     {/if}
                 {/each}
             {/each}
             </div>
+        </div>
+        <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4">
+            {#if roomInfo.amount === 0}
+                        <b class="text-2xl font-normal self-center">Gratuito</b>
+                    {:else}
+                        <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
+                    {/if}
+            <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-115 duration-300 
+            lg:hover:underline  text-white text-[15px] font-bold py-3 
+            px-8 rounded-lg justify-self-center">Comprar</button>
+        </div>
         </div>
         {/if}
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">

@@ -1,6 +1,7 @@
 export interface ActivityInfo {
         description: string;
         activity_name: string;
+        ticket_max_session: number;
         date_start: string;
         id: string;
         day: number;

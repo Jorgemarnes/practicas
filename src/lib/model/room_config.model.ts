@@ -3,6 +3,8 @@ export interface RoomConfig {
         amount: number;
         label: string;
         map_info: string;
+        color: string;
+        id: string;
     }
 
 export interface RoomConfigResponse {

@@ -10,14 +10,16 @@ export const GET = async ({ url }: RequestEvent) => {
                     images.url as room_map,
                     price_rates.amount,
                     room_areas.label,
-                    rooms_config.map_info
+                    rooms_config.map_info,
+                    room_areas.color,
+                    room_areas.id
                 FROM sessions
                     INNER JOIN rooms_config ON rooms_config.id = sessions.config_id
                     INNER JOIN images_room_config ON images_room_config.rooms_config_id = rooms_config.id
                     INNER JOIN images ON images.id = images_room_config.image_id
                     INNER JOIN price_rates ON price_rates.session_id = sessions.id
                     INNER JOIN room_areas ON room_areas.room_conf_id = rooms_config.id
-                WHERE sessions.id = ?`;
+                WHERE sessions.id = ?;`;
             
         let params = [];
         params.push(id);
