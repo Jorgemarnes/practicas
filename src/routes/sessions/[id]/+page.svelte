@@ -32,8 +32,6 @@
     let room = map_info['_room']
     let rows = room['rows']
     let columns = room['columns']
-    let grid_info = room['grid']
-    let labels = room['labels']
 
         function Range(end: number, start: number = 1) {
             let values = [];
@@ -46,7 +44,7 @@
     let row_list = Range(rows)
     let column_list = Range(columns)
 
-    
+    let grid_info = room['grid']
 
     let boton: HTMLButtonElement | null = null;
 
@@ -73,9 +71,6 @@
     for (let i = 0; i < room.areas.length; i++) {
         a_colors[room.areas[i].id] = room.areas[i].color
     }
-
-    
-
     let selected_seats: number= $state(0);
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
