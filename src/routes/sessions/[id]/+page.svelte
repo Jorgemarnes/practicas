@@ -31,6 +31,8 @@
     let room = map_info['_room']
     let rows = room['rows']
     let columns = room['columns']
+    let grid_info = room['grid']
+    let labels = room['labels']
 
         function Range(end: number, start: number = 1) {
             let values = [];
@@ -43,7 +45,7 @@
     let row_list = Range(rows)
     let column_list = Range(columns)
 
-    let grid_info = room['grid']
+    
 
     let boton: HTMLButtonElement | null = null;
 
@@ -70,6 +72,9 @@
     for (let i = 0; i < room.areas.length; i++) {
         a_colors[room.areas[i].id] = room.areas[i].color
     }
+
+    
+
     let selected_seats: number= $state(0);
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
@@ -200,6 +205,18 @@
                         {/if}
                     {/each}
                 {/each}
+                </div>
+                <div class="absolute bottom-10 left-10 flex flex-col gap-2">
+                    {#each room.areas as area}
+                        <div class="mx-2 px-3 py-1 rounded-lg text-[#f6f6f6]  flex items-center" style="background-color: {area.color};">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: #f6f6f6;" viewBox="0 0 256 256" class="flex float-left mx-1 self-center"><path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
+                                132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
+                                40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
+                                </path></svg>
+                            <p class="text-shadow-2xs float-left self-center text-[14px] font-bold">{area.label} | {roomInfo?.amount}€</p>
+                            
+                        </div>
+                    {/each}
                 </div>
             </div>
             <div id="seatContainer">
