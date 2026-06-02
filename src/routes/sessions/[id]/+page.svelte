@@ -78,6 +78,20 @@
         a_colors[room.areas[i].id] = room.areas[i].color
     }
 
+    function fadeOut(element: HTMLElement, duration: number = 3000){
+        const animation = element.animate([
+            { opacity: 1 },
+            { opacity: 0}
+        ], {
+            duration: duration,
+            fill: 'forwards'
+        });
+
+        animation.onfinish = () => {
+            element.style.opacity = 'none';
+        }
+    }
+
     let selected_seats: number= $state(0);
     function toggleSeat(id : string, areaid: string) {
         const element = document.getElementById(id);
@@ -91,7 +105,23 @@
                 element.style.fill = a_colors[areaid];
                 selected_seats -= 1
             }
-        }
+            if (selected_seats === activityInfo.ticket_max_session){
+                const popUpEntradas = document.createElement('p');
+                let container: HTMLElement | null = document.getElementById('container');
+                if (container) {
+                    popUpEntradas.textContent = `Has alcanzado el máximo de ${activityInfo.ticket_max_session} entradas por sesión.`;
+                    popUpEntradas.className = 'fixed bg-red-500 bottom-[5%] w-[40%] left-[30%] lg:w-[10%] lg:left-[45%] text-white p-2 rounded-lg';
+                    container?.appendChild(popUpEntradas);
+                    setTimeout(() => {
+                        fadeOut(popUpEntradas, 2000);
+                    }, 1000);
+                    setTimeout(() => {
+                        container?.removeChild(popUpEntradas);
+                        }, 3000);
+                    
+                };
+            };
+        };
     };
 
 
