@@ -11,29 +11,18 @@
     let filtroSitios = $state<string[]>([]);
     let filtroFecha = $state('');
     const min_date = new Date(Date.now()).toISOString().split('T')[0];
-    console.log(min_date);
 
     let isOpen = $state(false);
-
-    const localidades = $derived(
-        [...new Set(data.activities.map((activity: ActivityInfo) => activity.places_name))].sort()
-    );
-    
-    
 
     const eventosFiltrados = $derived(
         data.activities.filter(filtrados => {
             const fechaEvento = filtrados.date_start.split('T')[0];
-            const casaSitio =
-                filtroSitios.length === 0 || filtroSitios.includes(filtrados.places_name);
-            filtroFecha.split('/').join('');
             const casaFecha = !filtroFecha || new Date(fechaEvento) <= new Date(filtroFecha);
-            return casaSitio && casaFecha;
+            return casaFecha;
         })
     );
 
     function clearFiltros() {
-        filtroSitios = [];
         filtroFecha = '';
     }
 
@@ -42,10 +31,8 @@
 
     }
 
-
 </script>
-
-    <div class="w-screen h-full bg-gray-400 p-5 mx-0 overflow-x-hidden">
+    <div class="w-screen h-screen bg-gray-400 p-5 mx-0 overflow-x-hidden">
         <h1 class="flex mb-5 font-bold text-[50px] sm:text-[50px] sm:justify-center">Sesiones:</h1>
         <div class="mb-2.5 align-center 
             flex-wrap gap-4 bg-gray-200 p-5  flex z-5">
@@ -55,30 +42,16 @@
                 <div id ="filters" class="m-2.5 align-center 
                 flex-wrap gap-4 bg-gray-200 flex"
                 transition:slide={{ duration: 300}}>
-                <div class="bg-blue-50 border p-5 gap-5">
-                    {#each localidades as localidad}
-                    <label class="float-left ml-2 mr-2">
-                        <input
-                            type="checkbox"
-                            value={localidad}
-                            bind:group={filtroSitios}/>
-                        {localidad}
-                    </label>
-                {/each}
-                </div>
-                <label class="ml-10 self-center text-[1px]" for="fecha">Hasta:</label>
+                <label class=" self-center text-[25px]" for="fecha">Hasta:</label>
                 <input id="fecha" type="date" min="{min_date}" bind:value={filtroFecha}
                 class="border rounded bg-blue-50 pl-2 pr-2"/>
                 <div class="basis-full"></div>
-                <button onclick={clearFiltros} class=" bg-gray-300 p-2">Limpiar filtros</button>
+                <button onclick={clearFiltros} class=" bg-gray-300 p-2 rounded">Limpiar filtros</button>
                 </div>
                 {/if}
             </fieldset>
-            
         </div>
-    
-    
-    
+
     <div class="justify-items-center align-center 
     flex-wrap grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
     gap-4 bg-gray-200 p-5">
@@ -96,7 +69,6 @@
                     <span class="text-[16px] sm:text-[16px] italic"
                     >{activity.day} de {MONTHS[activity.month - 1]} de {activity.year}</span>
                 </div>
-                
             </a>
         {/each}
     </div>

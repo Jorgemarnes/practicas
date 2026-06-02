@@ -8,11 +8,6 @@
     import { draggable } from '@neodrag/svelte';
   import type { NumericRange } from '@sveltejs/kit';
 
-
-
-
-
-
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     
@@ -26,7 +21,6 @@
     let minutes = $derived(time.getMinutes());
     let max_tickets = activityInfo.ticket_max_session
     
-
     let activityUrl = JSON.parse(activityInfo.url || '{}');
     let activityImg = $derived(`${import.meta.env.VITE_TICKETARY_API}${activityUrl['big']}`);
 
@@ -53,12 +47,11 @@
 
     let boton: HTMLButtonElement | null = null;
 
-
     let is_open = $state(false);
-
 
     function toggleBuy() {
         is_open = !is_open;
+        selected_seats = 0;
     }
 
     let increment = 1
@@ -77,7 +70,7 @@
     for (let i = 0; i < room.areas.length; i++) {
         a_colors[room.areas[i].id] = room.areas[i].color
     }
-
+    let seats_ids = $state<string[]>([])
     let selected_seats: number= $state(0);
     function toggleSeat(id : string, areaid: string) {
         const element = document.getElementById(id);
@@ -86,15 +79,26 @@
                 if (selected_seats < activityInfo.ticket_max_session) {
                     element.style.fill = 'green';
                     selected_seats += 1
+                    seats_ids.push(id)
                 }
             }else if (element.style.fill === 'green') {
                 element.style.fill = a_colors[areaid];
                 selected_seats -= 1
+                let index = seats_ids.indexOf(id)
+                seats_ids.splice(index, 1)
             }
         }
     };
 
-
+    function activateSeat(x: string, y: string) {
+        const seats = document.getElementById('seatContainer');
+        let seat = document.createElement('p')
+        seat.id = "{x}{y}"
+        seat.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> </path></svg><span>{x}-{y}</span><span>{roomInfo.amount}€</span>'
+        seats.appendChild(seat)
+        console.log(seat)
+    
+    }
 </script>
 
 <svelte:head>
@@ -113,12 +117,8 @@
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center mr-2 ml-2 mt-2 lg:bg-gray-200 lg:rounded-lg" >
             <div id="titulo_info" class="justify-around conten-center p-4 bg-gray-200 rounded-lg gap-5 mb-2">
                 <h1 class="text-l font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
-                <p
-                        class="text-opacity-60 text-black text-[14px] content-center self-end italic"
-                        id="ubicacion"
-                    >
-                        {activityInfo.places_name}
-            </p>
+                <p class="text-opacity-60 text-black text-[14px] content-center self-end italic"
+                id="ubicacion">{activityInfo.places_name}</p>
                 <h1 class="text-3xl font-bold mt-1 mb-1">{activityInfo.activity_name}</h1>
                 <div id="ubiprecio" class="grid grid-cols-[1fr] gap-5">
                     {#if roomInfo.amount === 0}
@@ -140,45 +140,46 @@
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
         {#if is_open}
-        <div  transition:slide={{ duration: 300}}>
-        <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl">
-        <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
-         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('In')}>+</button>
-        <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
-         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('Out')}>-</button>
-            <div id="grid" style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 13px); grid-template-rows: repeat({rows}, 13px);" class="grid h-auto bg-contain bg-no-repeat bg-center origin-[0,0] will-change-transform" use:draggable={{ axis: 'both' }}>
-            {#each grid_info as row}
-                {#each row as seat}
-                    {#if seat.type === 'seat'}
-                        {#if seat.areaId in a_colors}
-                            <button aria-label="none" onmousedown={() => toggleSeat(`${seat.id}`,`${seat.areaId}`)}
-                            class="row-start-{seat.x} col-start-{seat.y} 
-                            rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" ><svg id="{seat.id}"
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256">
-                            <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
-                            132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
-                            40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
-                            </path></svg></button>
+            <div  transition:slide={{ duration: 300}}>
+            <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl">
+            <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('In')}>+</button>
+            <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('Out')}>-</button>
+                <div id="grid" style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 13px); grid-template-rows: repeat({rows}, 13px);" class="grid h-auto bg-contain bg-no-repeat bg-center origin-[0,0] will-change-transform" use:draggable={{ axis: 'both' }}>
+                {#each grid_info as row}
+                    {#each row as seat}
+                        {#if seat.type === 'seat'}
+                            {#if seat.areaId in a_colors}
+                                <button aria-label="none" onmousedown={() => toggleSeat(`${seat.id}`,`${seat.areaId}`)}
+                                class="row-start-{seat.x} col-start-{seat.y} 
+                                rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" onclick={() => activateSeat(`${seat.x}`,`${seat.y}`)}><svg id="{seat.id}"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256">
+                                <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
+                                132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
+                                40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
+                                </path></svg></button>
+                            {/if}
+                        {:else}
+                            <button aria-label="none"></button>
                         {/if}
-                    {:else}
-                        <button aria-label="none"></button>
-                    {/if}
+                    {/each}
                 {/each}
-            {/each}
+                </div>
             </div>
-        </div>
-        <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4">
-            {#if roomInfo.amount === 0}
-                        <b class="text-2xl font-normal self-center">Gratuito</b>
-                    {:else}
-                        <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
-                    {/if}
-            <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-115 duration-300 
-            lg:hover:underline  text-white text-[15px] font-bold py-3 
-            px-8 rounded-lg justify-self-center">Comprar</button>
-        </div>
-        </div>
+            <div id="seatContainer">
         {/if}
+            </div>
+            <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4">
+                {#if roomInfo.amount === 0}
+                            <b class="text-2xl font-normal self-center">Gratuito</b>
+                        {:else}
+                            <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
+                        {/if}
+                <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-115 duration-300 
+                lg:hover:underline  text-white text-[15px] font-bold py-3 
+                px-8 rounded-lg justify-self-center">Comprar</button>
+            </div>
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
@@ -221,4 +222,3 @@
         </div>
         </div>
     </div>
-</div>
