@@ -6,7 +6,8 @@
     let { data } = $props();
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
-  import type { NumericRange } from '@sveltejs/kit';
+    import type { NumericRange } from '@sveltejs/kit';
+    import { onMount } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -138,6 +139,13 @@
             element.style.opacity = 'none';
         }
     }
+    onMount(()  => {
+        let buyButton: HTMLButtonElement = document.getElementById('buyButton');
+       if (selected_seats === 0) { 
+            buyButton.className = `bg-[#5a1d89] opacity-50 text-white text-[15px] font-bold py-3 
+                px-8 rounded-lg justify-self-center`
+        }
+    })
 
 </script>
 
@@ -206,7 +214,7 @@
                     {/each}
                 {/each}
                 </div>
-                <div class="absolute bottom-10 left-0 w-[60%] mx-5 flex lg:flex-col gap-2">
+                <div class="absolute bottom-10 left-0 mx-5 flex lg:flex-col gap-2">
                     {#each room.areas as area}
                         <div class="px-2 py-1 rounded-lg text-[#f6f6f6]  flex items-center" style="background-color: {area.color};">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: #f6f6f6;" viewBox="0 0 256 256" class="flex float-left mx-1 self-center"><path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
@@ -227,15 +235,9 @@
                         {:else}
                             <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
                         {/if}
-                {#if roomInfo.amount === 0}
-                            <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
+                            <button id="buyButton" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
                 lg:hover:underline  text-white text-[15px] font-bold py-3 
-                px-8 rounded-lg justify-self-center">Reservar</button>
-                        {:else}
-                            <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
-                lg:hover:underline  text-white text-[15px] font-bold py-3 
-                px-8 rounded-lg justify-self-center">Comprar</button>
-                        {/if}
+                px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
             </div>
         </div>
         {/if}
