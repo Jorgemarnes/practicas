@@ -196,6 +196,11 @@
                 {/each}
             {/each}
             </div>
+            <div class="absolute bottom-1 left-0">
+                {#each room.label as label}
+                    <p>{label}</p>
+                {/each}
+            </div>
         </div>
         <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4">
             {#if roomInfo.amount === 0}
