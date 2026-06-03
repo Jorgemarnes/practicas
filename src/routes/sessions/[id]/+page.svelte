@@ -71,24 +71,8 @@
     for (let i = 0; i < room.areas.length; i++) {
         a_colors[room.areas[i].id] = room.areas[i].color
     }
-<<<<<<< HEAD
 
-    function fadeOut(element: HTMLElement, duration: number = 3000){
-        const animation = element.animate([
-            { opacity: 1 },
-            { opacity: 0}
-        ], {
-            duration: duration,
-            fill: 'forwards'
-        });
 
-        animation.onfinish = () => {
-            element.style.opacity = 'none';
-        }
-    }
-
-=======
->>>>>>> jorge
     let selected_seats: number= $state(0);
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
