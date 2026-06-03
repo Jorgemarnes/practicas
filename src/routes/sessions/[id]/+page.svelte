@@ -54,6 +54,7 @@
     function toggleBuy() {
         is_open = !is_open;
         selected_seats = 0;
+        storedSeats = {};
     }
 
     let increment = 1
@@ -160,10 +161,14 @@
    
     function toggleModal() {
         const modal = document.getElementById('modal') as HTMLDialogElement;
+        let form = document.getElementById('form') as HTMLFormElement;
+        let formButton = document.getElementById('formButton') as HTMLInputElement;
         if (modal) {
             if (modal.open) {
                 modal_open = false;
                 modal.close();
+                form.reset();
+                formButton.disabled = true;
             } else {
                 modal_open = true;
                 modal.showModal();
@@ -190,7 +195,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
 
-    <dialog id="modal" class="w-[20%] rounded-lg p-5 mx-auto my-auto">
+    <dialog id="modal" class="md:w-[40%] lg:w-[30%] rounded-lg p-5 mx-auto my-auto">
         <div class="grid grid-cols-[70%_30%] mb-5">
             <p class="text-2xl font-bold">Tickets</p>
             <button class="text-2xl font-bold w-10 h-10
@@ -222,11 +227,11 @@
             <p class="text-2xl font-bold mt-2">Datos del comprador/a</p>
          </div>
          <div>
-            <form>
+            <form id="form">
                 <label for="name">Nombre <span class="text-red-500">*</span></label><br>
                 <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3"><br>
                 <label for="email">Email <span class="text-red-500">*</span></label><br>
-                <input type="text" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3"><br>
+                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3"><br>
                 <label for="telefono">Teléfono <span class="text-red-500">*</span></label><br>
                 <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3"><br>
                 <label for="newsletter"><input type="checkbox" id="newsletter" name="newsletter"/>Acepto recibir información de novedades y eventos</label><br>
