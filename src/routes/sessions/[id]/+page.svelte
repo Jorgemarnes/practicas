@@ -189,9 +189,17 @@
             <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
             </div>
             <div class="flex items-center justify-self-end">
-                <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount} €</p>
+                <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount}€</p>
             </div>
         {/each}
+    </div>
+    <div class="grid grid-cols-[90%_10%] bg-gray-700 text-white p-2">
+        <div>
+            <p class="font-bold">Total:</p>
+        </div>
+        <div>
+            <p class="font-bold justify-self-end">{roomInfo?.amount * selected_seats}€</p>
+        </div>
     </div>
 
 </dialog>
