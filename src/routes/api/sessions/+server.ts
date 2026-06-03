@@ -58,7 +58,3 @@ export const GET = async ({ url }: RequestEvent) => {
         return json(errorResponse, { status: 500 });
     }
 };
-
-
-
-
