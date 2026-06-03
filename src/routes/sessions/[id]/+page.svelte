@@ -6,7 +6,8 @@
     let { data } = $props();
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
-  import type { NumericRange } from '@sveltejs/kit';
+    import type { NumericRange } from '@sveltejs/kit';
+    import { onMount } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -133,6 +134,13 @@
             element.style.opacity = 'none';
         }
     }
+    onMount(()  => {
+        let buyButton: HTMLButtonElement = document.getElementById('buyButton');
+       if (selected_seats === 0) { 
+            buyButton.className = `bg-[#5a1d89] opacity-50 text-white text-[15px] font-bold py-3 
+                px-8 rounded-lg justify-self-center`
+        }
+    })
 
 </script>
 
@@ -225,6 +233,9 @@
                             <button id="buy" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
                 lg:hover:underline  text-white text-[15px] font-bold py-3 
                 px-8 rounded-lg justify-self-center">Comprar</button>
+                            <button id="buyButton" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
+                lg:hover:underline  text-white text-[15px] font-bold py-3 
+                px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
             </div>
         </div>
         {/if}
