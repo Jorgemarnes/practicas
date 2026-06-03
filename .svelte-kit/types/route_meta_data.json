@@ -5,11 +5,11 @@
 	"/api/activities": [
 		"src/routes/api/activities/+server.ts"
 	],
+	"/api/coupons": [
+		"src/routes/api/coupons/+server.ts"
+	],
 	"/api/rooms": [
 		"src/routes/api/rooms/+server.ts"
-	],
-	"/api/sessions": [
-		"src/routes/api/sessions/+server.ts"
 	],
 	"/sessions/[id]": [
 		"src/routes/sessions/[id]/+page.server.ts"
