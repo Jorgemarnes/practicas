@@ -1,13 +1,9 @@
 <script lang="ts">
-    import type { ActivityInfo } from '$lib/model';
-    import type { RoomConfig } from '$lib/model/room_config.model.js';
     import { page } from '$app/stores';
     import '$lib/style.css';
     let { data } = $props();
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
-    import type { NumericRange } from '@sveltejs/kit';
-    import { onMount } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -17,6 +13,8 @@
     const rooms = info.room;
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
+    const couponsInfo = $state(info.coupons);
+    
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
@@ -49,10 +47,13 @@
     let boton: HTMLButtonElement | null = null;
 
     let is_open = $state(false);
+    let modal_open = $state(false);
 
     function toggleBuy() {
         is_open = !is_open;
         selected_seats = 0;
+        storedSeats = {};
+
     }
 
     let increment = 1
@@ -91,13 +92,15 @@
                         seat.className = "grid grid-cols-3 grid-rows-1 bg-purple-200 rounded-lg mx-10 text-xl m-2 gap-4 shadow-lg hover:opacity-60 hover:scale-105 active:scale-90 duration-300"
                         seat.onclick = () => {seats.removeChild(seat);
                                             element.style.fill = a_colors[areaid];
-                                            selected_seats -= 1}
+                                            selected_seats -= 1;
+                                            delete storedSeats[label]};
                         seats.appendChild(seat)
                     }
                 }
             }else if (element.style.fill === 'green') {
                 element.style.fill = a_colors[areaid];
                 selected_seats -= 1
+                delete storedSeats[label]
                 const seats = document.getElementById('seatContainer');
                 if (seats) {
                     let seat = document.getElementById(`${label}`)
@@ -159,10 +162,21 @@
         const modal = document.getElementById('modal') as HTMLDialogElement;
         if (modal) {
             if (modal.open) {
+                modal_open = false;
                 modal.close();
             } else {
+                modal_open = true;
                 modal.showModal();
             }
+        }
+    }
+
+    function setBuy() {
+        let formButton = document.getElementById('formButton') as HTMLInputElement;
+        if (formButton.disabled === true) {
+        formButton.disabled = false;
+        } else {
+            formButton.disabled = true;
         }
     }
 
@@ -175,34 +189,55 @@
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
-<dialog id="modal" class="w-[20%] h-[50%] rounded-lg p-5 mx-auto my-auto">
-    <div class="grid grid-cols-[70%_30%] mb-5">
-        <p class="text-2xl font-bold">Tickets</p>
-        <button class="text-2xl font-bold w-10 h-10
-            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300 justify-self-end" onclick="{toggleModal}">x</button>
-    </div>
-    <div class="grid grid-cols-[15%_70%_15%]">
-        {#each Object.entries(storedSeats) as [label, color]}
-            <div class="flex items-center mb-2">
-                <p class="font-bold">{label}</p>
-            </div>
-            <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
-            </div>
-            <div class="flex items-center justify-self-end">
-                <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount}€</p>
-            </div>
-        {/each}
-    </div>
-    <div class="grid grid-cols-[90%_10%] bg-gray-700 text-white p-2">
-        <div>
-            <p class="font-bold">Total:</p>
-        </div>
-        <div>
-            <p class="font-bold justify-self-end">{roomInfo?.amount * selected_seats}€</p>
-        </div>
-    </div>
 
-</dialog>
+    <dialog id="modal" class="w-[20%] rounded-lg p-5 mx-auto my-auto">
+        <div class="grid grid-cols-[70%_30%] mb-5">
+            <p class="text-2xl font-bold">Tickets</p>
+            <button class="text-2xl font-bold w-10 h-10
+                bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300 justify-self-end" onclick="{toggleModal}">x</button>
+        </div>
+        <div class="grid grid-cols-[15%_70%_15%]">
+        {#if modal_open}
+            {#each Object.entries(storedSeats) as [label, color]}
+                <div class="flex items-center mb-2">
+                    <p class="font-bold">{label}</p>
+                </div>
+                <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
+                </div>
+                <div class="flex items-center justify-self-end">
+                    <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount}€</p>
+                </div>
+            {/each}
+        {/if}
+        </div>
+        <div class="grid grid-cols-[90%_10%] bg-gray-700 text-white p-2">
+            <div>
+                <p class="font-bold">Total:</p>
+            </div>
+            <div>
+                <p class="font-bold justify-self-end">{roomInfo?.amount * selected_seats}€</p>
+            </div>
+        </div>
+         <div class="mb-5">
+            <p class="text-2xl font-bold mt-2">Datos del comprador/a</p>
+         </div>
+         <div>
+            <form>
+                <label for="name">Nombre <span class="text-red-500">*</span></label><br>
+                <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu nombre"><br>
+                <label for="email">Email <span class="text-red-500">*</span></label><br>
+                <input type="text" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu email"><br>
+                <label for="telefono">Teléfono <span class="text-red-500">*</span></label><br>
+                <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu telefono"><br>
+                <label for="newsletter"><input type="checkbox" id="newsletter" name="newsletter"/>Acepto recibir información de novedades y eventos</label><br>
+                <label for="privacidad"><input type="checkbox" id="privacidad" name="privacidad" required onclick={() => setBuy()}/><span class="text-red-500">*</span>He leído y acepto los Términos y condiciones y 
+                    <a href="https://sede.losrealejos.es/castellano/eMiservicio/9031892218D846E3A343E37F026841D4.asp" target="_blank" class="text-blue-500 hover:underline">Política de privacidad</a></label><br>
+                <input id="formButton" type="submit" value="Comprar" disabled class=" flex justify-self-center my-6 px-4 py-3 rounded-lg text-white bg-[#5a1d89] hover:bg-[#7d3ead] disabled:bg-gray-400 disabled:text-gray-700"/>
+            </form>
+         </div>
+
+    </dialog>
+
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
         <img src='{activityImg}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
