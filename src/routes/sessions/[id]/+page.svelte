@@ -72,28 +72,17 @@
         a_colors[room.areas[i].id] = room.areas[i].color
     }
 
-    function fadeOut(element: HTMLElement, duration: number = 3000){
-        const animation = element.animate([
-            { opacity: 1 },
-            { opacity: 0}
-        ], {
-            duration: duration,
-            fill: 'forwards'
-        });
-
-        animation.onfinish = () => {
-            element.style.opacity = 'none';
-        }
-    }
 
     let selected_seats: number= $state(0);
+    let storedSeats: Record<string, string> = $state({});
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
         if (element) {
             if (element.style.fill != 'green'){
                 if (selected_seats < activityInfo.ticket_max_session) {
                     element.style.fill = 'green';
-                    selected_seats += 1;
+                    selected_seats += 1
+                    storedSeats[label] = a_colors[areaid]; 
                     const seats = document.getElementById('seatContainer');
                     if (seats) {
                         let seat = document.createElement('div')
@@ -109,6 +98,29 @@
             }else if (element.style.fill === 'green') {
                 element.style.fill = a_colors[areaid];
                 selected_seats -= 1
+                const seats = document.getElementById('seatContainer');
+                if (seats) {
+                    let seat = document.getElementById(`${label}`)
+                    if (seat) {
+                        seats.removeChild(seat)
+                    }
+                }
+            }
+            if (selected_seats === activityInfo.ticket_max_session){
+                const popUpEntradas = document.createElement('p');
+                let container: HTMLElement | null = document.getElementById('container');
+                if (container) {
+                    popUpEntradas.textContent = `Has alcanzado el máximo de ${activityInfo.ticket_max_session} entradas por sesión.`;
+                    popUpEntradas.className = 'fixed bg-red-500 bottom-[5%] w-[40%] left-[30%] lg:w-[10%] lg:left-[45%] text-white p-2 rounded-lg';
+                    container?.appendChild(popUpEntradas);
+                    setTimeout(() => {
+                        fadeOut(popUpEntradas, 2000);
+                    }, 1000);
+                    setTimeout(() => {
+                        container?.removeChild(popUpEntradas);
+                        }, 3000);
+                        return;
+                }
             }
             if (selected_seats === activityInfo.ticket_max_session){
                 const popUpEntradas = document.createElement('p');
@@ -129,12 +141,68 @@
         };
     };
 
+    function fadeOut(element: HTMLElement, duration: number = 3000){
+        const animation = element.animate([
+            { opacity: 1 },
+            { opacity: 0}
+        ], {
+            duration: duration,
+            fill: 'forwards'
+        });
+
+        animation.onfinish = () => {
+            element.style.opacity = 'none';
+        }
+    }
+   
+    function toggleModal() {
+        const modal = document.getElementById('modal') as HTMLDialogElement;
+        if (modal) {
+            if (modal.open) {
+                modal.close();
+            } else {
+                modal.showModal();
+            }
+        }
+    }
+
+    function hola() {
+        console.log('hola');
+    }
 
 </script>
 
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
+<dialog id="modal" class="w-[20%] h-[50%] rounded-lg p-5 mx-auto my-auto">
+    <div class="grid grid-cols-[70%_30%] mb-5">
+        <p class="text-2xl font-bold">Tickets</p>
+        <button class="text-2xl font-bold w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300 justify-self-end" onclick="{toggleModal}">x</button>
+    </div>
+    <div class="grid grid-cols-[15%_70%_15%]">
+        {#each Object.entries(storedSeats) as [label, color]}
+            <div class="flex items-center mb-2">
+                <p class="font-bold">{label}</p>
+            </div>
+            <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
+            </div>
+            <div class="flex items-center justify-self-end">
+                <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount}€</p>
+            </div>
+        {/each}
+    </div>
+    <div class="grid grid-cols-[90%_10%] bg-gray-700 text-white p-2">
+        <div>
+            <p class="font-bold">Total:</p>
+        </div>
+        <div>
+            <p class="font-bold justify-self-end">{roomInfo?.amount * selected_seats}€</p>
+        </div>
+    </div>
+
+</dialog>
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
         <img src='{activityImg}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
@@ -171,48 +239,67 @@
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
         {#if is_open}
-        <div  transition:slide={{ duration: 300}}>
-        <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl">
-        <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
-         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('In')}>+</button>
-        <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
-         bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center" onmousedown={() => zoom('Out')}>-</button>
-            <div id="grid" style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 13px); grid-template-rows: repeat({rows}, 13px);" class="grid h-auto bg-contain bg-no-repeat bg-center origin-[0,0] will-change-transform" use:draggable={{ axis: 'both' }}>
-            {#each grid_info as row}
-                {#each row as seat}
-                    {#if seat.type === 'seat'}
-                        {#if seat.areaId in a_colors}
-                            <button aria-label="none" onmousedown={() => toggleSeat(`${seat.id}`,`${seat.areaId}`)}
-                            class="row-start-{seat.x} col-start-{seat.y} 
-                            rounded-full flex justify-center items-center hover:opacity-60 active:scale-110" ><svg id="{seat.id}"
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256">
-                            <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
-                            132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
-                            40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
-                            </path></svg></button>
+            <div  transition:slide={{ duration: 300}}>
+            <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl rounded-lg">
+            <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300" onmousedown={() => zoom('In')}>+</button>
+            <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300" onmousedown={() => zoom('Out')}>-</button>
+                <div id="grid" style="background-image: url('{roomImg}'); grid-template-columns: repeat({columns}, 13px); grid-template-rows: repeat({rows}, 13px);" class="grid h-auto bg-contain bg-no-repeat bg-center origin-[0,0] will-change-transform" use:draggable={{ axis: 'both' }}>
+                {#each grid_info as row}
+                    {#each row as seat}
+                        {#if seat.type === 'seat'}
+                            {#if seat.areaId in a_colors}
+                                <button aria-label="none" onclick={() => toggleSeat(`${seat.id}`,`${seat.areaId}`,`${seat.label}`)}
+                                class="row-start-{seat.x} col-start-{seat.y} 
+                                rounded-full flex justify-center items-center hover:opacity-60 active:scale-90 hover:scale-110 duration-100"><svg id="{seat.id}"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="fill: {a_colors[seat.areaId]};" viewBox="0 0 256 256">
+                                <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
+                                132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
+                                40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
+                                </path></svg></button>
+                            {/if}
+                        {:else}
+                            <button aria-label="none"></button>
                         {/if}
-                    {:else}
-                        <button aria-label="none"></button>
-                    {/if}
+                    {/each}
                 {/each}
-            {/each}
+                </div>
+                <div class="absolute bottom-10 left-0 mx-5 flex lg:flex-col gap-2">
+                    {#each room.areas as area}
+                        <div class="px-2 py-1 rounded-lg text-[#f6f6f6]  flex items-center" style="background-color: {area.color};">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: #f6f6f6;" viewBox="0 0 256 256" class="flex float-left mx-1 self-center"><path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72,
+                                132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81,
+                                40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z">
+                                </path></svg>
+                            <p class="text-shadow-2xs float-left self-center text-[10px] lg:text-[14px] font-bold">{area.label} {roomInfo?.amount}€</p>
+                            
+                        </div>
+                    {/each}
+                </div>
+            </div>
+            <div id="seatContainer">
+            </div>
+            <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4 bg-purple-200">
+                {#if roomInfo.amount === 0}
+                            <b class="text-2xl font-normal self-center">Gratuito</b>
+                        {:else}
+                            <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
+                        {/if}
+                        {#if selected_seats === 0}
+                            <button id="buyButton" class="bg-gray-400 
+                text-white text-[15px] font-bold py-3 px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
+                        {:else}
+                            <button id="buyButton" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
+                lg:hover:underline  text-white text-[15px] font-bold py-3 
+                px-8 rounded-lg justify-self-center" onclick={() => toggleModal()}>Comprar</button>
+                        {/if}
             </div>
             <div class="absolute bottom-1 left-0">
                 {#each room.label as label}
                     <p>{label}</p>
                 {/each}
             </div>
-        </div>
-        <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4">
-            {#if roomInfo.amount === 0}
-                        <b class="text-2xl font-normal self-center">Gratuito</b>
-                    {:else}
-                        <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
-                    {/if}
-            <button class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-115 duration-300 
-            lg:hover:underline  text-white text-[15px] font-bold py-3 
-            px-8 rounded-lg justify-self-center">Comprar</button>
-        </div>
         </div>
         {/if}
 
