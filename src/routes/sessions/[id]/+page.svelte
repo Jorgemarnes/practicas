@@ -88,7 +88,7 @@
                     if (seats) {
                         let seat = document.createElement('div')
                         seat.id = `${label}`
-                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; margin-right: 10px;" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> </path></svg><span>${label}&nbsp;</span></div><span class="col-start-2 col-end-3 text-[17px] self-center">Toca para cancelar selección</span><span class="col-start-3 justify-self-center self-center text-2xl font-bold">${roomInfo.amount}€</span>`
+                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; margin-right: 10px;" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> </path></svg><span>${label}&nbsp;</span></div><span class="col-start-2 col-end-3 text-[10px] self-center">Toca para cancelar selección</span><span class="col-start-3 justify-self-center self-center text-xl py-2">${roomInfo.amount}€</span>`
                         seat.className = "grid grid-cols-3 grid-rows-1 bg-purple-200 rounded-lg mx-10 text-xl m-2 gap-4 shadow-lg hover:opacity-60 hover:scale-105 active:scale-90 duration-300"
                         seat.onclick = () => {seats.removeChild(seat);
                                             element.style.fill = a_colors[areaid];
@@ -147,7 +147,7 @@
     function fadeOut(element: HTMLElement, duration: number = 3000){
         const animation = element.animate([
             { opacity: 1 },
-            { opacity: 0}
+            { opacity: 0 }
         ], {
             duration: duration,
             fill: 'forwards'
@@ -157,16 +157,23 @@
             element.style.opacity = 'none';
         }
     }
+
    
     function toggleModal() {
         const modal = document.getElementById('modal') as HTMLDialogElement;
+        let form = document.getElementById('form') as HTMLFormElement;
+        let formButton = document.getElementById('formButton') as HTMLInputElement; 
         if (modal) {
             if (modal.open) {
                 modal_open = false;
                 modal.close();
+                form.reset();
+                formButton.disabled = true;
             } else {
                 modal_open = true;
                 modal.showModal();
+                form.reset();
+                formButton.disabled = true;
             }
         }
     }
@@ -190,7 +197,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
 
-    <dialog id="modal" class="w-[20%] rounded-lg p-5 mx-auto my-auto">
+    <dialog id="modal" class="md:w-[40%] lg:w-[30%] rounded-lg p-5 mx-auto my-auto">
         <div class="grid grid-cols-[70%_30%] mb-5">
             <p class="text-2xl font-bold">Tickets</p>
             <button class="text-2xl font-bold w-10 h-10
@@ -222,11 +229,11 @@
             <p class="text-2xl font-bold mt-2">Datos del comprador/a</p>
          </div>
          <div>
-            <form>
+            <form id="form">
                 <label for="name">Nombre <span class="text-red-500">*</span></label><br>
                 <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu nombre"><br>
                 <label for="email">Email <span class="text-red-500">*</span></label><br>
-                <input type="text" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu email"><br>
+                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu email"><br>
                 <label for="telefono">Teléfono <span class="text-red-500">*</span></label><br>
                 <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu telefono"><br>
                 <label for="newsletter"><input type="checkbox" id="newsletter" name="newsletter"/>Acepto recibir información de novedades y eventos</label><br>
@@ -275,7 +282,7 @@
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
         {#if is_open}
             <div  transition:slide={{ duration: 300}}>
-            <div class="flex justify-center overflow-hidden relative m-10 border shadow-2xl rounded-lg">
+            <div class="flex justify-center overflow-hidden relative m-10 border border-gray-400 shadow-2xl rounded-lg">
             <button class="text-2xl font-bold absolute top-12.5 right-8 z-10 w-10 h-10
             bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300" onmousedown={() => zoom('In')}>+</button>
             <button class="text-2xl font-bold absolute top-25 right-8 z-10 w-10 h-10
@@ -314,8 +321,17 @@
                 </div>
             </div>
             <div id="seatContainer">
+            
             </div>
-            <div class="m-10 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4 bg-purple-200">
+            {#if selected_seats}
+                <form id="couponForm" transition:slide={{ duration: 500 }} target="_self">
+                    <div id="couponContainer" class="grid grid-cols-[70%_30%] bg-gray-700  mx-10 rounded-lg rounded-l-xl text-white">
+                        <input type="text" placeholder="Introduce tu código de descuento" id="couponInput" name="couponInput" class="h-full w-full p-3 bg-gray-100 text-black rounded-l-lg border border-gray-400">
+                        <input id="cuoponButton" type="submit" value="Añadir" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => hola()}>
+                    </div>
+                </form>
+            {/if}
+            <div class="mx-10 my-3 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4 bg-purple-200">
                 {#if roomInfo.amount === 0}
                             <b class="text-2xl font-normal self-center">Gratuito</b>
                         {:else}
@@ -369,13 +385,7 @@
                 <img class="w-8 h-8 mr-1 icon self-center" src="/file-text.png" alt="Icono reembolso" />
                 <h4 class="text-[16px] font-bold float-left self-center">Políticas de reembolso</h4>
             </div>
-            <p>
-                Contacta vía teléfono al 922 346 234
-                <br />
-                De lunes a viernes de 9:00 a 14:00 horas
-                <br />
-                Avenida de Canarias, 6 CP38419, Los Realejos
-            </p>
+            <p>{@html activityInfo.refund_text}</p>
             <hr class="mt-1" />
         </div>
         </div>

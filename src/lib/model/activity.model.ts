@@ -12,6 +12,7 @@ export interface ActivityInfo {
         amount: number;
         places_name: string;
         url: string | null;
+        refund_text: string;
     }
 
 export interface ActivityResponse {

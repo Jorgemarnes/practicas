@@ -6,7 +6,7 @@ import { pool } from '$lib/server/db';
 export const GET = async ({ url }: RequestEvent) => {
     const id = url.searchParams.get('id');
 
-    let query = `SELECT
+    let query = `SELECT DISTINCT
                     sessions.id,
                     coupons.status,
                     coupons.code, coupons.type,
