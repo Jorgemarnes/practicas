@@ -74,6 +74,7 @@
 
 
     let selected_seats: number= $state(0);
+    let storedSeats: Record<string, string> = $state({});
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
         if (element) {
@@ -81,6 +82,7 @@
                 if (selected_seats < activityInfo.ticket_max_session) {
                     element.style.fill = 'green';
                     selected_seats += 1
+                    storedSeats[label] = a_colors[areaid]; 
                     const seats = document.getElementById('seatContainer');
                     if (seats) {
                         let seat = document.createElement('div')
@@ -152,19 +154,47 @@
             element.style.opacity = 'none';
         }
     }
-    onMount(()  => {
-        let buyButton: HTMLButtonElement = document.getElementById('buyButton');
-       if (selected_seats === 0) { 
-            buyButton.className = `bg-[#5a1d89] opacity-50 text-white text-[15px] font-bold py-3 
-                px-8 rounded-lg justify-self-center`
+   
+    function toggleModal() {
+        const modal = document.getElementById('modal') as HTMLDialogElement;
+        if (modal) {
+            if (modal.open) {
+                modal.close();
+            } else {
+                modal.showModal();
+            }
         }
-    })
+    }
+
+    function hola() {
+        console.log('hola');
+    }
 
 </script>
 
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
+<dialog id="modal" class="w-[20%] h-[50%] rounded-lg p-5 mx-auto my-auto">
+    <div class="grid grid-cols-[70%_30%] mb-5">
+        <p class="text-2xl font-bold">Tickets</p>
+        <button class="text-2xl font-bold w-10 h-10
+            bg-gray-300 border-2 border-gray-400 rounded-full shadow-2xl flex justify-center content-center active:scale-90 hover:scale-110 duration-300 justify-self-end" onclick="{toggleModal}">x</button>
+    </div>
+    <div class="grid grid-cols-[15%_70%_15%]">
+        {#each Object.entries(storedSeats) as [label, color]}
+            <div class="flex items-center mb-2">
+                <p class="font-bold">{label}</p>
+            </div>
+            <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
+            </div>
+            <div class="flex items-center justify-self-end">
+                <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount} €</p>
+            </div>
+        {/each}
+    </div>
+
+</dialog>
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
         <img src='{activityImg}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
@@ -248,9 +278,14 @@
                         {:else}
                             <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
                         {/if}
+                        {#if selected_seats === 0}
+                            <button id="buyButton" class="bg-gray-400 
+                text-white text-[15px] font-bold py-3 px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
+                        {:else}
                             <button id="buyButton" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
                 lg:hover:underline  text-white text-[15px] font-bold py-3 
-                px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
+                px-8 rounded-lg justify-self-center" onclick={() => toggleModal()}>Comprar</button>
+                        {/if}
             </div>
             <div class="absolute bottom-1 left-0">
                 {#each room.label as label}
