@@ -18,13 +18,15 @@ export const GET = async ({ url }: RequestEvent) => {
                 YEAR(sessions.date_start) as year,
                 parameters.name as public_name,
                 places.name as places_name,
-                images.url
+                images.url,
+                accounts.refund_text
             FROM activities
                 INNER JOIN sessions ON activities.id = sessions.activity_id 
                 INNER JOIN places ON sessions.place_id = places.id
                 INNER JOIN images ON images.id = (
                 SELECT id FROM images WHERE table_id = activities.id LIMIT 1)
                 INNER JOIN parameters ON activities.type_public_id = parameters.id 
+                INNER JOIN accounts ON activities.account_id = accounts.id
             WHERE  date_start > NOW()
                 AND sessions.hidden = 0
                 AND activities.name != 'Demo Realejos'
