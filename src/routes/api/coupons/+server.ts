@@ -4,30 +4,25 @@ import { pool } from '$lib/server/db';
 
 
 export const GET = async ({ url }: RequestEvent) => {
-    const id = url.searchParams.get('id');
 
     let query = `SELECT DISTINCT
-                    sessions.id,
-                    coupons.status,
-                    coupons.code, coupons.type,
-                    coupons.discount, coupons.max_uses,
-                    coupons.infinity_uses,
-                    coupons.once_per_session,
-                    coupons.once_per_client,
-                    coupons.uses,
-                    coupons.valid_from,
-                    coupons.valid_until
+                    status, code, 
+                    coupons.type,
+                    discount, 
+                    coupons.max_uses,
+                    infinity_uses,
+                    once_per_session,
+                    once_per_client,
+                    uses,
+                    valid_from,
+                    valid_until
                 FROM coupons
-                JOIN coupons_sessions
-                    ON coupons_sessions.coupon_id = coupons.id
-                JOIN sessions
-                    ON sessions.id = coupons_sessions.session_id
                 WHERE 
-                    coupons.valid_from <= NOW()
+                    valid_from <= NOW()
                 AND 
-                    coupons.valid_until >= NOW()
+                    valid_until >= NOW()
                 AND 
-                    coupons.status = 1`;
+                    status = 1`;
 
     console.log('📨 [GET /api/activities] Petición recibida');
     try {
