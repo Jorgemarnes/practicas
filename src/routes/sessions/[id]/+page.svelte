@@ -274,11 +274,11 @@
          <div>
             <form id="form">
                 <label for="name">Nombre <span class="text-red-500">*</span></label><br>
-                <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu nombre"><br>
+                <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su nombre"><br>
                 <label for="email">Email <span class="text-red-500">*</span></label><br>
-                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu email"><br>
+                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su email"><br>
                 <label for="telefono">Teléfono <span class="text-red-500">*</span></label><br>
-                <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu telefono"><br>
+                <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su telefono"><br>
                 <label for="newsletter"><input type="checkbox" id="newsletter" name="newsletter"/>Acepto recibir información de novedades y eventos</label><br>
                 <label for="privacidad"><input type="checkbox" id="privacidad" name="privacidad" required onclick={() => setBuy()}/><span class="text-red-500">*</span>He leído y acepto los Términos y condiciones y 
                     <a href="https://sede.losrealejos.es/castellano/eMiservicio/9031892218D846E3A343E37F026841D4.asp" target="_blank" class="text-blue-500 hover:underline">Política de privacidad</a></label><br>
@@ -429,11 +429,7 @@
                 <h4 class="text-[16px] font-bold float-left self-center">Políticas de reembolso</h4>
             </div>
             <p>
-                Contacta vía teléfono al 922 346 234
-                <br />
-                De lunes a viernes de 9:00 a 14:00 horas
-                <br />
-                Avenida de Canarias, 6 CP38419, Los Realejos
+                {@html activityInfo.refund_text}
             </p>
             <hr class="mt-1" />
         </div>
