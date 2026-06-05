@@ -4,6 +4,7 @@
     let { data } = $props();
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
+    import { createRawSnippet } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -25,6 +26,7 @@
 
     let roomUrl = JSON.parse(roomInfo?.room_map || '{}');
     let roomImg = $derived((`${import.meta.env.VITE_TICKETARY_API}${roomUrl['big']}`));
+
 
     let map_info = JSON.parse(roomInfo?.map_info || '{}');
     let room = map_info['_room']
@@ -73,11 +75,18 @@
         a_colors[room.areas[i].id] = room.areas[i].color
     }
 
+    
 
     let selected_seats: number= $state(0);
     let storedSeats: Record<string, string> = $state({});
+
+    let orderAmount = $derived(roomInfo.amount * selected_seats);
+
+    
+    
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
+        let seatsModal = document.getElementById('seatsModal') as HTMLDialogElement;
         if (element) {
             if (element.style.fill != 'green'){
                 if (selected_seats < activityInfo.ticket_max_session) {
@@ -88,13 +97,22 @@
                     if (seats) {
                         let seat = document.createElement('div')
                         seat.id = `${label}`
-                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; margin-right: 10px;" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> </path></svg><span>${label}&nbsp;</span></div><span class="col-start-2 col-end-3 text-[10px] self-center">Toca para cancelar selección</span><span class="col-start-3 justify-self-center self-center text-xl py-2">${roomInfo.amount}€</span>`
+                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; 
+                        margin-right: 10px;" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,
+                        0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> 
+                        </path></svg><span>${label}&nbsp;</span></div><span class="col-start-2 col-end-3 text-[10px] self-center">Toca para cancelar selección</span><span class="col-start-3 
+                        justify-self-center self-center text-xl py-2">${roomInfo.amount}€</span>`
                         seat.className = "grid grid-cols-3 grid-rows-1 bg-purple-200 rounded-lg mx-10 text-xl m-2 gap-4 shadow-lg hover:opacity-60 hover:scale-105 active:scale-90 duration-300"
                         seat.onclick = () => {seats.removeChild(seat);
                                             element.style.fill = a_colors[areaid];
                                             selected_seats -= 1;
                                             delete storedSeats[label]};
                         seats.appendChild(seat)
+                    }
+                    if (a_colors[areaid] === '75e99669-1e03-4ce2-a454-af4bfbfeca22'){
+                        if(seatsModal){
+                            seatsModal.showModal();
+                        }
                     }
                 }
             }else if (element.style.fill === 'green') {
@@ -187,8 +205,30 @@
         }
     }
 
+    function couponCheck() {
+        let couponInput = document.getElementById('couponInput') as HTMLInputElement;
+        let couponValue = couponInput.value;
+    }
+
+    let usedCoupons: Array<string> = []
     function hola() {
-        console.log('hola');
+        let couponInput = document.getElementById('couponInput') as HTMLInputElement;
+        let couponValue = couponInput.value;
+        for (let i = 0; i < couponsInfo.length; i++){
+            let row = couponsInfo[i];
+            if (row.code.toUpperCase() == couponValue.toUpperCase()) {
+                console.log('Cupón validado')
+                 if (row.type === 'percent' && !usedCoupons.includes(row.code)) {
+                    orderAmount = orderAmount * ((100 - row.discount) / 100)
+                    usedCoupons.push(row.code)
+                    break
+                } else if (row.type === 'amount' && !usedCoupons.includes(row.code)){
+                    orderAmount -= row.discount
+                    usedCoupons.push(row.code)
+                    break
+                }
+            }
+        }
     }
 
 </script>
@@ -196,7 +236,14 @@
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
-
+    <dialog id="seatsModal" class="md:w-[40%] lg:w[30%] rounded-lg p-5 mx-auto my-auto">
+        <div class="flex justify-center items-center ">
+            <div class="w-5 h-5 bg-black"></div>
+            <p class="font-bold">Información importante</p>
+        </div>
+        <div></div>
+        <div></div>
+    </dialog>
     <dialog id="modal" class="md:w-[40%] lg:w-[30%] rounded-lg p-5 mx-auto my-auto">
         <div class="grid grid-cols-[70%_30%] mb-5">
             <p class="text-2xl font-bold">Tickets</p>
@@ -209,7 +256,7 @@
                 <div class="flex items-center mb-2">
                     <p class="font-bold">{label}</p>
                 </div>
-                <div class="grow h-[1px] bg-slate-500 flex self-center mb-2">
+                <div class="grow h-px bg-slate-500 flex self-center mb-2">
                 </div>
                 <div class="flex items-center justify-self-end">
                     <p style="background-color: {color};" class="text-[#ffffff] font-bold px-2 py-1 rounded-lg mb-2">{roomInfo?.amount}€</p>
@@ -326,16 +373,16 @@
             {#if selected_seats}
                 <form id="couponForm" transition:slide={{ duration: 500 }} target="_self">
                     <div id="couponContainer" class="grid grid-cols-[70%_30%] bg-gray-700  mx-10 rounded-lg rounded-l-xl text-white">
-                        <input type="text" placeholder="Introduce tu código de descuento" id="couponInput" name="couponInput" class="h-full w-full p-3 bg-gray-100 text-black rounded-l-lg border border-gray-400">
-                        <input id="cuoponButton" type="submit" value="Añadir" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => hola()}>
+                        <input id="couponInput" type="text" placeholder="Introduce tu código de descuento" name="couponInput" class="h-full w-full p-3 bg-gray-100 text-black rounded-l-lg border border-gray-400">
+                        <input id="couponButton" type="submit" value="Añadir" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => hola()}>
                     </div>
                 </form>
             {/if}
-            <div class="mx-10 my-3 bg-gray-300 rounded-[3mm] p-5 grid grid-cols-2 gap-4 bg-purple-200">
+            <div class="mx-10 my-3  rounded-[3mm] p-5 grid grid-cols-2 gap-4 bg-purple-200">
                 {#if roomInfo.amount === 0}
                             <b class="text-2xl font-normal self-center">Gratuito</b>
                         {:else}
-                            <b class="text-2xl font-normal self-center">Total: {roomInfo?.amount * selected_seats}€</b>
+                            <b class="text-2xl font-normal self-center">Total: {orderAmount}€</b>
                         {/if}
                         {#if selected_seats === 0}
                             <button id="buyButton" class="bg-gray-400 
