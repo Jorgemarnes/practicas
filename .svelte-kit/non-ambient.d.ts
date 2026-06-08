@@ -29,7 +29,7 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-		RouteId(): "/" | "/api" | "/api/activities" | "/api/coupons" | "/api/rooms" | "/event" | "/sessions" | "/sessions/events" | "/sessions/[id]";
+		RouteId(): "/" | "/api" | "/api/activities" | "/api/coupons" | "/api/rooms" | "/api/sessions" | "/event" | "/sessions" | "/sessions/events" | "/sessions/[id]";
 		RouteParams(): {
 			"/sessions/[id]": { id: string }
 		};
@@ -39,12 +39,13 @@ declare module "$app/types" {
 			"/api/activities": Record<string, never>;
 			"/api/coupons": Record<string, never>;
 			"/api/rooms": Record<string, never>;
+			"/api/sessions": Record<string, never>;
 			"/event": Record<string, never>;
 			"/sessions": { id?: string };
 			"/sessions/events": Record<string, never>;
 			"/sessions/[id]": { id: string }
 		};
-		Pathname(): "/" | "/api/activities" | "/api/coupons" | "/api/rooms" | `/sessions/${string}` & {};
+		Pathname(): "/" | "/api/activities" | "/api/coupons" | "/api/rooms" | "/api/sessions" | `/sessions/${string}` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/calendar-dots.png" | "/file-text.png" | "/foto.jpg" | "/map-pin.png" | "/robots.txt" | "/users-three.png" | string & {};
 	}

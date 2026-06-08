@@ -15,6 +15,7 @@
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
     const couponsInfo = $state(info.coupons);
+    const sessionsInfo = info.sessions;
     
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
@@ -32,6 +33,8 @@
     let room = map_info['_room']
     let rows = room['rows']
     let columns = room['columns']
+
+    
 
         function Range(end: number, start: number = 1) {
             let values = [];
@@ -75,12 +78,28 @@
         a_colors[room.areas[i].id] = room.areas[i].color
     }
 
-    
-
     let selected_seats: number= $state(0);
     let storedSeats: Record<string, string> = $state({});
 
     let orderAmount = $derived(roomInfo.amount * selected_seats);
+
+    let galleryImages = []
+    for (let i = 0; i < sessionsInfo?.length; i++) {
+        if (sessionsInfo[i].type === 'gallery'){
+            galleryImages.push(JSON.parse(sessionsInfo[i].url))
+        };
+    };
+    
+    let youtubeUrl = sessionsInfo[0].url_youtube;
+
+    function getEmbedUrl(url: string) {
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
+        return match ? `https://www.youtube.com/embed/${match[1]}`: null;
+    }
+    let embedUrl = getEmbedUrl(youtubeUrl)
+    console.log(youtubeUrl);
+    console.log(embedUrl);
+
 
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
@@ -206,7 +225,7 @@
     }
 
     let usedCoupons: Array<string> = []
-    function hola() {
+    function applyCoupon() {
         let couponInput = document.getElementById('couponInput') as HTMLInputElement;
         let couponValue = couponInput.value;
         for (let i = 0; i < couponsInfo.length; i++){
@@ -225,6 +244,14 @@
             }
         }
     }
+
+    
+    
+
+    function hola() {
+        console.log('hola');
+    }
+
 </script>
 
 <svelte:head>
@@ -370,7 +397,7 @@
                 <form id="couponForm" method="get" transition:slide={{ duration: 500 }} target="_self" >
                     <div id="couponContainer" class="grid grid-cols-[70%_30%] bg-gray-700  mx-10 rounded-lg rounded-l-xl text-white">
                         <input id="couponInput" type="text" placeholder="Introduce tu código de descuento" name="couponInput" class="h-full w-full p-3 bg-gray-100 text-black rounded-l-lg border border-gray-400">
-                        <button id="couponButton" type ="button" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => hola()}>Añadir</button>
+                        <button id="couponButton" type ="button" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => applyCoupon()}>Añadir</button>
                     </div>
                 </form>
             {/if}
@@ -400,6 +427,16 @@
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
+            {#if galleryImages.length > 0}
+            <div id="gallery">
+
+            </div>
+            {/if}
+            {#if youtubeUrl != null}
+            <div class="w-full">
+                <iframe src='{embedUrl}' width="100%" height="400" title="video"></iframe>
+            </div>
+            {/if}
         </div>
 
         <div class="ml-5 mr-5 2xl:margin-right-[20px] 2xl:w-[75%] 2xl:col-start-2 p-2" id="data">

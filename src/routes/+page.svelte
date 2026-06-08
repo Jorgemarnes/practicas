@@ -32,21 +32,21 @@
     }
 
 </script>
-    <div class="w-screen h-screen bg-gray-400 p-5 mx-0 overflow-x-hidden">
-        <h1 class="flex mb-5 font-bold text-[50px] sm:text-[50px] sm:justify-center">Sesiones:</h1>
+    <div class="w-screen h-screen bg-[#f6f6f6] p-5 mx-0 overflow-x-hidden">
+        <h1 class="flex p-5 mb-5 font-bold text-[45px] sm:text-[45px] sm:justify-center">Sesiones:</h1>
         <div class="mb-2.5 align-center 
-            flex-wrap gap-4 bg-gray-200 p-5  flex z-5">
+            flex-wrap gap-4 bg-[#f6f6f6]  p-5  flex z-5">
             <fieldset>
                 <button class ="text-xl font-bold hover:underline p-2" onclick={toggleMenu}>Filtros</button>
                 {#if isOpen}
                 <div id ="filters" class="m-2.5 align-center 
-                flex-wrap gap-4 bg-gray-200 flex"
+                flex-wrap gap-4 bg-[#f6f6f6] flex"
                 transition:slide={{ duration: 300}}>
-                <label class=" self-center text-[25px]" for="fecha">Hasta:</label>
+                <label class=" self-center text-[16px]" for="fecha">Hasta:</label>
                 <input id="fecha" type="date" min="{min_date}" bind:value={filtroFecha}
                 class="border rounded bg-blue-50 pl-2 pr-2"/>
                 <div class="basis-full"></div>
-                <button onclick={clearFiltros} class=" bg-gray-300 p-2 rounded">Limpiar filtros</button>
+                <button onclick={clearFiltros} class=" bg-gray-300 py-1 px-3 rounded">Limpiar filtros</button>
                 </div>
                 {/if}
             </fieldset>
@@ -54,7 +54,7 @@
 
     <div class="justify-items-center align-center 
     flex-wrap grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
-    gap-4 bg-gray-200 p-5">
+    gap-4 bg-[#f6f6f6]  p-5">
         {#each eventosFiltrados as activity}
             <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition 
                 duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50 hover:bg-black">
