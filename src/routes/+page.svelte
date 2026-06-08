@@ -56,13 +56,13 @@
     flex-wrap grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
     gap-4 bg-[#f6f6f6]  p-5">
         {#each eventosFiltrados as activity}
-            <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition 
+            <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition
                 duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50 hover:bg-black">
                 <div class="h-[60%] bg-amber-200 overflow-hidden ">
                     <img src={`${import.meta.env.VITE_TICKETARY_API}${JSON.parse(activity.url || '{}')['medium']}`} 
                     alt={activity.activity_name} class="w-full h-full object-cover scale-125" />
                 </div>
-                <div class="ml-2 mr-2 h-[40%] pt-2">
+                <div class="ml-2 mr-2 h-[40%] pt-2 " >
                     <span class="text-5 sm:text-[16px] active:scale-110 font-bold"
                     >{activity.activity_name}</span>
                     <hr class="mt-1 mb-1">

@@ -5,6 +5,8 @@
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
     import { createRawSnippet } from 'svelte';
+    import { nonpassive } from 'svelte/legacy';
+    import { onMount } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -93,9 +95,13 @@
     let youtubeUrl = sessionsInfo[0].url_youtube;
 
     function getEmbedUrl(url: string) {
+        if (youtubeUrl != null) {
         const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
         return match ? `https://www.youtube.com/embed/${match[1]}`: null;
+    } else {
+        return null
     }
+}
     let embedUrl = getEmbedUrl(youtubeUrl)
     console.log(youtubeUrl);
     console.log(embedUrl);
