@@ -102,7 +102,8 @@
     let galleryImages = []
     for (let i = 0; i < (sessionsInfo?.length ?? 0); i++) {
         if (sessionsInfo?.[i]?.type === 'gallery') {
-            galleryImages.push(JSON.parse(sessionsInfo[i].url))
+            let imageurl = JSON.parse(sessionsInfo[i].url)
+            galleryImages.push(`${import.meta.env.VITE_TICKETARY_API}${imageurl['original']}`)
         }
     }
 
@@ -264,6 +265,25 @@
         activeCouponCode = matchedCoupon.code;
     }
 
+    function toggleImgModal(imgId: string) {
+        let modal = document.getElementById('imgContainer') as HTMLDialogElement;
+        let image = document.getElementById('imgModal') as HTMLImageElement | null;
+        if (image) {
+            image.src = imgId;
+        }
+        if (modal) {
+            if (modal.open) {
+                modal_open = false;
+                modal.close();
+            } else {
+                modal_open = true;
+                modal.showModal();
+            }
+        }
+        console.log('modal')
+
+    }
+
     
     
 
@@ -276,6 +296,13 @@
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
+
+    <dialog id='imgContainer' class="mx-auto my-auto overflow-hidden border-none bg-[transparent] p-0 max-h-[90vh] max-w-[95vw] w-auto">
+        <div class="relative mx-auto my-auto flex h-[90vh] w-auto items-center justify-center">
+            <button class="absolute top-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-400 bg-gray-300 text-2xl font-bold shadow-2xl opacity-70 transition duration-300 hover:scale-110 hover:opacity-100 active:scale-90 sm:top-3 sm:right-3" onclick={() => { const modal = document.getElementById('imgContainer') as HTMLDialogElement | null; modal?.close(); }}>x</button>
+            <img src='' alt='' id="imgModal" class="h-full w-auto object-contain"/>
+        </div>
+    </dialog>
     <dialog id="seatsModal" class="w-100 rounded-lg p-5 mx-auto my-auto">
         <div class="flex justify-center items-center">
             <svg class="mx-2"height="20" width="20" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 59.617 59.617" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <circle style="fill:#030104;" cx="22.317" cy="4.971" r="4.971"></circle> <path style="fill:#030104;" d="M42.432,45.669c-0.959-0.457-2.107-0.054-2.566,0.906c-2.67,5.585-8.395,9.192-14.582,9.192 c-8.907,0-16.155-7.246-16.155-16.154c0-5.057,2.303-9.729,6.319-12.816c0.843-0.648,1.001-1.856,0.354-2.698 c-0.649-0.844-1.856-1-2.698-0.354c-4.97,3.822-7.822,9.606-7.822,15.868c0,11.029,8.973,20.004,20.003,20.004 c7.659,0,14.747-4.469,18.053-11.381C43.795,47.275,43.389,46.128,42.432,45.669z"></path> <path style="fill:#030104;" d="M54.018,47.154L43.654,30.527c-0.495-0.795-1.475-0.982-2.518-0.944H28.089 c-0.53,0-0.959-0.056-0.956-0.123l0.007-0.123v-2.118c0-0.531,0.085-0.946,0.192-0.935c0.064,0.007,0.13,0.012,0.195,0.012h11.385 c1.283,0,2.324-1.041,2.324-2.325c0-1.283-1.041-2.324-2.324-2.324H27.527c-0.065,0-0.131,0.004-0.195,0.011 c-0.107,0.013-0.192-0.402-0.192-0.934v-5.437c0-2.067-1.676-3.742-3.742-3.742h-1.039c-2.068,0-3.743,1.675-3.743,3.742V29.82 v4.278c0,2.066,1.675,3.742,3.743,3.742h1.039h1.806H40.27c0.531,0,1.198,0.359,1.491,0.803 c1.802,2.723,7.569,11.434,7.569,11.434c0.695,1.117,2.312,1.371,3.607,0.564C54.23,49.834,54.713,48.273,54.018,47.154z"></path> </g> </g> </g></svg>
@@ -447,8 +474,14 @@
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
             {#if galleryImages.length > 0}
-            <div id="gallery">
-
+            <div class="not-prose overflow-auto ">
+            <div id="gallery" class="flex w-full snap-x gap-1 scroll-auto overflow-x-auto my-5">
+                {#each galleryImages as image}
+                <div class="snap-start scroll-ml-6 relative shrink-0 h-70 w-auto">
+                    <img src={image} id={image} alt="a" class="h-full" onclick={() => toggleImgModal(`${image}`)}/>
+                </div>
+                {/each}
+            </div>
             </div>
             {/if}
             {#if youtubeUrl && youtubeUrl.includes('youtu')}
