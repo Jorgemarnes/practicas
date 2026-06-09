@@ -5,6 +5,8 @@
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
     import { createRawSnippet } from 'svelte';
+    import { nonpassive } from 'svelte/legacy';
+    import { onMount } from 'svelte';
 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -15,6 +17,7 @@
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
     const couponsInfo = $state(info.coupons);
+    const sessionsInfo = info.sessions;
     
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
@@ -32,6 +35,8 @@
     let room = map_info['_room']
     let rows = room['rows']
     let columns = room['columns']
+
+    
 
         function Range(end: number, start: number = 1) {
             let values = [];
@@ -75,12 +80,32 @@
         a_colors[room.areas[i].id] = room.areas[i].color
     }
 
-    
-
     let selected_seats: number= $state(0);
     let storedSeats: Record<string, string> = $state({});
 
     let orderAmount = $derived(roomInfo.amount * selected_seats);
+
+    let galleryImages = []
+    for (let i = 0; i < sessionsInfo?.length; i++) {
+        if (sessionsInfo[i].type === 'gallery'){
+            galleryImages.push(JSON.parse(sessionsInfo[i].url))
+        };
+    };
+    
+    let youtubeUrl = sessionsInfo[0].url_youtube;
+
+    function getEmbedUrl(url: string) {
+        if (youtubeUrl != null) {
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{11})/);
+        return match ? `https://www.youtube.com/embed/${match[1]}`: null;
+    } else {
+        return null
+    }
+}
+    let embedUrl = getEmbedUrl(youtubeUrl)
+    console.log(youtubeUrl);
+    console.log(embedUrl);
+
 
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
@@ -206,7 +231,7 @@
     }
 
     let usedCoupons: Array<string> = []
-    function hola() {
+    function applyCoupon() {
         let couponInput = document.getElementById('couponInput') as HTMLInputElement;
         let couponValue = couponInput.value;
         for (let i = 0; i < couponsInfo.length; i++){
@@ -225,6 +250,14 @@
             }
         }
     }
+
+    
+    
+
+    function hola() {
+        console.log('hola');
+    }
+
 </script>
 
 <svelte:head>
@@ -274,11 +307,11 @@
          <div>
             <form id="form">
                 <label for="name">Nombre <span class="text-red-500">*</span></label><br>
-                <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su nombre"><br>
+                <input type="text" id="name" name="name" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu nombre"><br>
                 <label for="email">Email <span class="text-red-500">*</span></label><br>
-                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su email"><br>
+                <input type="email" id="email" name="email" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu email"><br>
                 <label for="telefono">Teléfono <span class="text-red-500">*</span></label><br>
-                <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Introduzca aquí su telefono"><br>
+                <input type="text" id="telefono" name="telefono" required class="w-full bg-gray-200 py-2 px-3 mb-3" placeholder="Escribe aquí tu telefono"><br>
                 <label for="newsletter"><input type="checkbox" id="newsletter" name="newsletter"/>Acepto recibir información de novedades y eventos</label><br>
                 <label for="privacidad"><input type="checkbox" id="privacidad" name="privacidad" required onclick={() => setBuy()}/><span class="text-red-500">*</span>He leído y acepto los Términos y condiciones y 
                     <a href="https://sede.losrealejos.es/castellano/eMiservicio/9031892218D846E3A343E37F026841D4.asp" target="_blank" class="text-blue-500 hover:underline">Política de privacidad</a></label><br>
@@ -367,10 +400,10 @@
             
             </div>
             {#if selected_seats}
-                <form id="couponForm" transition:slide={{ duration: 500 }} target="_self">
+                <form id="couponForm" method="get" transition:slide={{ duration: 500 }} target="_self" >
                     <div id="couponContainer" class="grid grid-cols-[70%_30%] bg-gray-700  mx-10 rounded-lg rounded-l-xl text-white">
                         <input id="couponInput" type="text" placeholder="Introduce tu código de descuento" name="couponInput" class="h-full w-full p-3 bg-gray-100 text-black rounded-l-lg border border-gray-400">
-                        <input id="couponButton" type="submit" value="Añadir" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => hola()}>
+                        <button id="couponButton" type ="button" class="p-5 w-full h-full hover:bg-gray-600 hover:underline rounded-r-lg text-lg font-bold" onclick={() => applyCoupon()}>Añadir</button>
                     </div>
                 </form>
             {/if}
@@ -400,6 +433,16 @@
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
+            {#if galleryImages.length > 0}
+            <div id="gallery">
+
+            </div>
+            {/if}
+            {#if youtubeUrl != null}
+            <div class="w-full">
+                <iframe src='{embedUrl}' width="100%" height="400" title="video"></iframe>
+            </div>
+            {/if}
         </div>
 
         <div class="ml-5 mr-5 2xl:margin-right-[20px] 2xl:w-[75%] 2xl:col-start-2 p-2" id="data">
@@ -429,7 +472,11 @@
                 <h4 class="text-[16px] font-bold float-left self-center">Políticas de reembolso</h4>
             </div>
             <p>
-                {@html activityInfo.refund_text}
+                Contacta vía teléfono al 922 346 234
+                <br />
+                De lunes a viernes de 9:00 a 14:00 horas
+                <br />
+                Avenida de Canarias, 6 CP38419, Los Realejos
             </p>
             <hr class="mt-1" />
         </div>
