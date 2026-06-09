@@ -4,6 +4,9 @@
     import { page } from '$app/stores';
     import '$lib/style.css';
     import { slide } from 'svelte/transition';
+    import { onMount } from 'svelte';
+    import { ssrModuleExportsKey } from 'vite/module-runner';
+    import { writable } from 'svelte/store';
 
 
     let { data } = $props();
@@ -28,11 +31,9 @@
 
     function toggleMenu() {
         isOpen = !isOpen;   
-
     }
-
 </script>
-    <div class="w-screen h-screen bg-[#f6f6f6] p-5 mx-0 overflow-x-hidden">
+    <div id="container" class="w-screen h-screen bg-[#f6f6f6] p-5 mx-0 overflow-x-hidden">
         <h1 class="flex p-5 mb-5 font-bold text-[45px] sm:text-[45px] sm:justify-center">Sesiones:</h1>
         <div class="mb-2.5 align-center 
             flex-wrap gap-4 bg-[#f6f6f6]  p-5  flex z-5">
@@ -53,8 +54,8 @@
         </div>
 
     <div class="justify-items-center align-center 
-    flex-wrap grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 
-    gap-4 bg-[#f6f6f6]  p-5">
+    flex-wrap grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 
+    gap-4 bg-[#f6f6f6] p-5 mx-auto md:w-[90vw} xl:w-[70vw]">
         {#each eventosFiltrados as activity}
             <a href={`/sessions/${activity.id}`} class="flex flex-col m-2.5 w-80 h-60 hover:scale-105 transition
                 duration-300 active:bg-blue-300 active:scale-110 bg-[#5a1d89] text-amber-50 hover:bg-black">
@@ -71,5 +72,7 @@
                 </div>
             </a>
         {/each}
-    </div>
+            <button id="scrollTop" class="fixed flex top-[90%] left-[80%] px-4 py-2
+             bg-black text-white text-2xl text-center opacity-90 md:hidden">^</button>
+</div>
 </div>
