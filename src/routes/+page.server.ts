@@ -1,4 +1,3 @@
-import { pool }  from '$lib/server/db';
 import type { ActivityInfo, ActivityResponse } from '$lib/model';
 
 export const load = async ({ fetch }: {fetch:any}) => {

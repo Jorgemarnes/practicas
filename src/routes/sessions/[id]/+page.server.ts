@@ -1,4 +1,3 @@
-import { pool }  from '$lib/server/db';
 import type { ActivityResponse } from '$lib/model/activity.model';
 import type { RoomConfigResponse } from '$lib/model/room_config.model';
 import type { CouponsResponse } from '$lib/model/coupons.model';
