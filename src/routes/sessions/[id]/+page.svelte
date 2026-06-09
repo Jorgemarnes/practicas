@@ -562,11 +562,7 @@
                 <h4 class="text-[16px] font-bold float-left self-center">Políticas de reembolso</h4>
             </div>
             <p>
-                Contacta vía teléfono al 922 346 234
-                <br />
-                De lunes a viernes de 9:00 a 14:00 horas
-                <br />
-                Avenida de Canarias, 6 CP38419, Los Realejos
+                {@html activityInfo.refund_text}
             </p>
             <hr class="mt-1" />
         </div>
