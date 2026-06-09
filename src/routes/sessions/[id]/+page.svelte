@@ -102,7 +102,8 @@
     let galleryImages = []
     for (let i = 0; i < (sessionsInfo?.length ?? 0); i++) {
         if (sessionsInfo?.[i]?.type === 'gallery') {
-            galleryImages.push(JSON.parse(sessionsInfo[i].url))
+            let imageurl = JSON.parse(sessionsInfo[i].url)
+            galleryImages.push(`${import.meta.env.VITE_TICKETARY_API}${imageurl['medium']}`)
         }
     }
 
@@ -447,8 +448,14 @@
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
             {#if galleryImages.length > 0}
-            <div id="gallery">
-
+            <div class="not-prose overflow-auto rounded-lg">
+            <div id="gallery" class="flex w-full snap-x gap-1 scroll-auto overflow-x-auto py-14">
+                {#each galleryImages as image}
+                <div class="snap-start scroll-ml-6 relative shrink-0 h-70 w-auto">
+                    <img src={image} alt="a" class="h-full"/>
+                </div>
+                {/each}
+            </div>
             </div>
             {/if}
             {#if youtubeUrl && youtubeUrl.includes('youtu')}
