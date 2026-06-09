@@ -305,6 +305,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
     <!--FORMULARIO-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
     <dialog id='imgContainer' class="mx-auto my-auto overflow-hidden border-none bg-[transparent] p-0 max-h-[90vh] max-w-[95vw] w-auto">
         <div class="relative mx-auto my-auto flex h-[90vh] w-auto items-center justify-center">
             <button class="absolute top-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-400 bg-gray-300 text-2xl font-bold shadow-2xl opacity-70 transition duration-300 hover:scale-110 hover:opacity-100 active:scale-90 sm:top-3 sm:right-3" onclick={() => { const modal = document.getElementById('imgContainer') as HTMLDialogElement | null; modal?.close(); }}>x</button>
