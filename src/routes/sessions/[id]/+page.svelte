@@ -48,9 +48,6 @@
     let rows = room['rows']
     let columns = room['columns']
 
-    let row_list = Range(rows)
-    let column_list = Range(columns)
-
     let grid_info = room['grid']
 
     let boton: HTMLButtonElement | null = null;
