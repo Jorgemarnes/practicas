@@ -1,29 +1,41 @@
 <script lang="ts">
+
     import { page } from '$app/stores';
     import '$lib/style.css';
     let { data } = $props();
     import { slide } from 'svelte/transition';
     import { draggable } from '@neodrag/svelte';
-    import { createRawSnippet } from 'svelte';
-    import { nonpassive } from 'svelte/legacy';
-    import { onMount } from 'svelte';
 
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    
-    // svelte-ignore state_referenced_locally
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+
+    //CREACION DE VARIABLES
+    const DAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+
+    //SEPARAR LOS DATOS
     let info = $state(data);
     const rooms = info.room;
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
     const couponsInfo = $state(info.coupons);
     const sessionsInfo = info.sessions;
-    
+
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+
+    //RESTO DE VARIABLES
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
     let max_tickets = activityInfo.ticket_max_session
-    
+
     let activityUrl = JSON.parse(activityInfo.url || '{}');
     let activityImg = $derived(`${import.meta.env.VITE_TICKETARY_API}${activityUrl['big']}`);
 
@@ -36,19 +48,6 @@
     let rows = room['rows']
     let columns = room['columns']
 
-    
-
-        function Range(end: number, start: number = 1) {
-            let values = [];
-            for (let i = start; i <= end; i++) {
-                values.push(i);
-            }
-            return values;
-        }
-
-    let row_list = Range(rows)
-    let column_list = Range(columns)
-
     let grid_info = room['grid']
 
     let boton: HTMLButtonElement | null = null;
@@ -56,30 +55,9 @@
     let is_open = $state(false);
     let modal_open = $state(false);
 
-    function toggleBuy() {
-        is_open = !is_open;
-        selected_seats = 0;
-        storedSeats = {};
-        activeCouponCode = '';
-
-    }
+    let a_colors: Record<string, string> = {}
 
     let increment = 1
-    function zoom(id: string) {
-        const grid = document.getElementById('grid'); 
-            if (id === 'In') {
-                increment += 0.3
-                grid.style.zoom = increment;
-            } else {
-                increment -= 0.3
-                grid.style.zoom = increment;
-            } 
-    }
-
-    let a_colors: Record<string, string> = {}
-    for (let i = 0; i < room.areas.length; i++) {
-        a_colors[room.areas[i].id] = room.areas[i].color
-    }
 
     let selected_seats: number= $state(0);
     let storedSeats: Record<string, string> = $state({});
@@ -110,6 +88,44 @@
     const videoSession = sessionsInfo?.find((session) => Boolean(session?.url_youtube)) ?? null;
     let youtubeUrl = videoSession?.url_youtube ?? '';
 
+    for (let i = 0; i < room.areas.length; i++) {
+        a_colors[room.areas[i].id] = room.areas[i].color
+    }
+    
+    let embedUrl = getEmbedUrl(youtubeUrl);
+
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+
+    //FUNCIONES
+    function Range(end: number, start: number = 1) {
+        let values = [];
+        for (let i = start; i <= end; i++) {
+            values.push(i);
+        }
+        return values;
+    }
+
+    function toggleBuy() {
+        is_open = !is_open;
+        selected_seats = 0;
+        storedSeats = {};
+        activeCouponCode = '';
+
+    }
+    
+    function zoom(id: string) {
+        const grid = document.getElementById('grid'); 
+            if (grid && id === 'In') {
+                increment += 0.3
+                grid.style.zoom = increment;
+            } else if (grid) {
+                increment -= 0.3
+                grid.style.zoom = increment;
+            }
+    }
+
     function getEmbedUrl(url: string = '') {
         if (!url) return null;
 
@@ -125,10 +141,6 @@
 
         return null;
     }
-    let embedUrl = getEmbedUrl(youtubeUrl)
-    console.log(youtubeUrl);
-    console.log(embedUrl);
-
 
     function toggleSeat(id : string, areaid: string, label: string) {
         const element = document.getElementById(id);
@@ -143,11 +155,11 @@
                     if (seats) {
                         let seat = document.createElement('div')
                         seat.id = `${label}`
-                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; 
+                        seat.innerHTML = `<div class="flex justify-center items-center bg-[#5a1d89] rounded text-white"><svg id="svg-${seat.id}" xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: white; 
                         margin-right: 10px;" viewBox="0 0 256 256"> <path d="M240,132a28,28,0,0,1-24,27.71V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V159.71A28,28,0,1,1,72, 132v36a8,8,0,0,0,16,0V144h80v24a8,8,0,0,0,16,
                         0V132a28,28,0,0,1,56,0ZM44,88a44.06,44.06,0,0,1,43.81, 40h80.38A44.06,44.06,0,0,1,212,88a4,4,0,0,0,4-4V72a40,40,0,0,0-40-40H80A40,40,0,0,0,40,72V84A4,4,0,0,0,44,88Z"> 
                         </path></svg><span>${label}&nbsp;</span></div><span class="col-start-2 col-end-3 text-[10px] self-center">Toca para cancelar selección</span><span class="col-start-3 
-                        justify-self-center self-center text-xl py-2">${roomInfo.amount}€</span>`
+                        justify-self-center self-center text-xl py-2">${roomInfo.amount.toString()}€</span>`
                         seat.className = "grid grid-cols-3 grid-rows-1 bg-purple-200 rounded-lg mx-10 text-xl m-2 gap-4 shadow-lg hover:opacity-60 hover:scale-105 active:scale-90 duration-300"
                         seat.onclick = () => {seats.removeChild(seat);
                                             element.style.fill = a_colors[areaid];
@@ -223,7 +235,6 @@
             element.style.opacity = 'none';
         }
     }
-
    
     function toggleModal() {
         const modal = document.getElementById('modal') as HTMLDialogElement;
@@ -280,24 +291,21 @@
                 modal.showModal();
             }
         }
-        console.log('modal')
-
     }
 
-    
-    
-
-    function hola() {
-        console.log('hola');
-    }
-
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
+    /---------------------------------------------------------------------------------------------------------------------/;
 </script>
 
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </svelte:head>
-
-    <dialog id='imgContainer' class="mx-auto my-auto overflow-hidden border-none bg-[transparent] p-0 max-h-[90vh] max-w-[95vw] w-auto">
+    <!--FORMULARIO-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <dialog id='imgContainer' class="mx-auto my-auto overflow-hidden border-none bg-transparent p-0 max-h-[90vh] max-w-[95vw] w-auto">
         <div class="relative mx-auto my-auto flex h-[90vh] w-auto items-center justify-center">
             <button class="absolute top-2 right-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-400 bg-gray-300 text-2xl font-bold shadow-2xl opacity-70 transition duration-300 hover:scale-110 hover:opacity-100 active:scale-90 sm:top-3 sm:right-3" onclick={() => { const modal = document.getElementById('imgContainer') as HTMLDialogElement | null; modal?.close(); }}>x</button>
             <img src='' alt='' id="imgModal" class="h-full w-auto object-contain"/>
@@ -358,9 +366,12 @@
                 <input id="formButton" type="submit" value="Comprar" disabled class=" flex justify-self-center my-6 px-4 py-3 rounded-lg text-white bg-[#5a1d89] hover:bg-[#7d3ead] disabled:bg-gray-400 disabled:text-gray-700"/>
             </form>
          </div>
-
     </dialog>
-
+    <!--FORMULARIO-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--CABECERA-->
 <div class="flex flex-col justfiy-center  items-center m-0 p-0 box-border w-screen">
     <div id="background" class="fixed z-10 top-0 left-0 w-full h-full overflow-hidden">
         <img src='{activityImg}' alt="Fondo" class="w-full h-full object-cover block blur scale-110"/>
@@ -373,7 +384,7 @@
 
         <div id="titulo" class="grid grid-cols-[60%_40%] max-2xl:grid-cols-1 items-center justify-center mr-2 ml-2 mt-2 lg:bg-gray-200 lg:rounded-lg" >
             <div id="titulo_info" class="justify-around conten-center p-4 bg-gray-200 rounded-lg gap-5 mb-2">
-                <h1 class="text-l font-bold">{activityInfo.day} de {months[activityInfo.month - 1]}</h1>
+                <h1 class="text-l font-bold">{activityInfo.day} de {MONTHS[activityInfo.month - 1]}</h1>
                 <p class="text-opacity-60 text-black text-[14px] content-center self-end italic"
                 id="ubicacion">{activityInfo.places_name}</p>
                 <h1 class="text-3xl font-bold mt-1 mb-1">{activityInfo.activity_name}</h1>
@@ -396,6 +407,11 @@
             </div>
         </div>
         <hr class="m-2 ml-5 mr-5 opacity-30"/>
+    <!--CABECERA-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--DESPLEGABLE ASIENTOS-->
         {#if is_open}
             <div  transition:slide={{ duration: 300}}>
             <div class="flex justify-center overflow-hidden relative m-10 border border-gray-400 shadow-2xl rounded-lg">
@@ -455,7 +471,7 @@
                         {/if}
                         {#if selected_seats === 0}
                             <button id="buyButton" class="bg-gray-400 
-                text-white text-[15px] font-bold py-3 px-8 rounded-lg justify-self-center" disabled onclick={() => hola()}>Comprar</button>
+                text-white text-[15px] font-bold py-3 px-8 rounded-lg justify-self-center" disabled>Comprar</button>
                         {:else}
                             <button id="buyButton" class="bg-[#5a1d89] hover:bg-[#7d3ead] active:scale-90 hover:scale-110 duration-300 
                 lg:hover:underline  text-white text-[15px] font-bold py-3 
@@ -469,19 +485,30 @@
             </div>
         </div>
         {/if}
-
+    <!--DESPLEGABLE ASIENTOS-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--DESCRIPCION E INFORMACION-->
         <div class="flex flex-col 2xl:grid 2xl:grid-cols-[70%_30%] max-w-225 mx-auto">
         <div class="ml-5 mr-5 p-4 **:font-sans!" >
             <div>{@html activityInfo.description}</div>
+    <!--DESCRIPCION E INFORMACION-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--MULTIMEDIA-->
             {#if galleryImages.length > 0}
-            <div class="not-prose overflow-auto ">
+            <br/>
+            <hr/>
+            <br/>
+            <h2 class="font-bold text-xl">Desliza las fotos para ver más</h2>
             <div id="gallery" class="flex w-full snap-x gap-1 scroll-auto overflow-x-auto my-5">
                 {#each galleryImages as image}
                 <div class="snap-start scroll-ml-6 relative shrink-0 h-70 w-auto">
                     <img src={image} id={image} alt="a" class="h-full" onclick={() => toggleImgModal(`${image}`)}/>
                 </div>
                 {/each}
-            </div>
             </div>
             {/if}
             {#if youtubeUrl && youtubeUrl.includes('youtu')}
@@ -563,41 +590,48 @@
                         </a>
                         </div>
                     </blockquote>
-<script async src="//www.instagram.com/embed.js"></script>
                 </div>
             {/if}
         </div>
-
+    <!--MULTIMEDIA-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--INFORMACIÓN ADICIONAL-->
         <div class="ml-5 mr-5 2xl:margin-right-[20px] 2xl:w-[75%] 2xl:col-start-2 p-2" id="data">
             <div class="margin-right-[10px] mt-2 flex ">
                 <img class="w-8 h-8 mr-1 icon float-left self-center" src="/calendar-dots.png" alt="Icono calendario" />
                 <h4 class="text-[16px] font-bold self-center">Fecha y Hora</h4>
             </div>
-            <p>{days[activityInfo.dow - 1]}, {activityInfo.day} de {months[activityInfo.month -1]} de {activityInfo.year}, {hours}:{minutes ? minutes : '00'}</p>
+            <p>{DAYS[activityInfo.dow - 1]}, {activityInfo.day} de {MONTHS[activityInfo.month -1]} de {activityInfo.year}, {hours}:{minutes ? minutes : '00'}</p>
             <hr class="mt-1"/>
 
             <div class="margin-right-[10px] mt-2 flex ">
-                <img class="w-8 h-8 mr-1 icon self-center" src="/map-pin.png" alt="Icono lugar" />
+                <img class="w-8 h-8 mr-1 icon self-center" src="/map-pin.png" alt="Icono lugar"/>
                 <h4 class="text-[16px] font-bold float-left self-center">Lugar</h4>
             </div>
             <p>{activityInfo.places_name}</p>
             <hr class="mt-1" />
 
             <div class="margin-right-[10px] mt-2 flex">
-                <img class="w-8 h-8 mr-1 icon self-center" src="/users-three.png" alt="Icono clasificación" />
-                <h4 class="text-[16px] font-bold float-left self-center"   >Clasificación</h4>
+                <img class="w-8 h-8 mr-1 icon self-center" src="/users-three.png" alt="Icono clasificación"/>
+                <h4 class="text-[16px] font-bold float-left self-center">Clasificación</h4>
             </div>
             <p>{activityInfo.public_name}</p>
-            <hr class="mt-1" />
+            <hr class="mt-1"/>
 
             <div class="margin-right-[10px] mt-2 flex">
-                <img class="w-8 h-8 mr-1 icon self-center" src="/file-text.png" alt="Icono reembolso" />
+                <img class="w-8 h-8 mr-1 icon self-center" src="/file-text.png" alt="Icono reembolso"/>
                 <h4 class="text-[16px] font-bold float-left self-center">Políticas de reembolso</h4>
             </div>
             <p>
                 {@html activityInfo.refund_text}
             </p>
             <hr class="mt-1" />
+    <!--INFORMACIÓN ADICIONAL-->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------------------------------------->
         </div>
         </div>
     </div>
