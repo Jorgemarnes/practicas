@@ -17,36 +17,36 @@
     /---------------------------------------------------------------------------------------------------------------------/;
     /---------------------------------------------------------------------------------------------------------------------/;
     /---------------------------------------------------------------------------------------------------------------------/;
-
     //SEPARAR LOS DATOS
     let info = $state(data);
     const rooms = info.room;
     const activityInfo = info.activities[0];
     const roomInfo = $state(info.room?.[0]);
-    const couponsInfo = $state(info.coupons);
     const sessionsInfo = info.sessions;
-
+    const couponsInfo = $state(info.coupons);
+    
+    
     /---------------------------------------------------------------------------------------------------------------------/;
     /---------------------------------------------------------------------------------------------------------------------/;
     /---------------------------------------------------------------------------------------------------------------------/;
-
+    
     //RESTO DE VARIABLES
     let time = $state(new Date(activityInfo.date_start));
     let hours = $derived(time.getHours());
     let minutes = $derived(time.getMinutes());
     let max_tickets = activityInfo.ticket_max_session
-
     let activityUrl = JSON.parse(activityInfo.url || '{}');
     let activityImg = $derived(`${import.meta.env.VITE_TICKETARY_API}${activityUrl['big']}`);
-
+    
+    
     let roomUrl = JSON.parse(roomInfo?.room_map || '{}');
     let roomImg = $derived((`${import.meta.env.VITE_TICKETARY_API}${roomUrl['big']}`));
 
 
-    let map_info = JSON.parse(roomInfo?.map_info || '{}');
     let room = map_info['_room']
     let rows = room['rows']
     let columns = room['columns']
+    let map_info = JSON.parse(roomInfo?.map_info || '{}');
 
     let grid_info = room['grid']
 
